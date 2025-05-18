@@ -14,14 +14,18 @@
 }:
 stdenv.mkDerivation rec {
   pname = "lib3mf";
-  version = "2.3.1";
+  version = "2.4.1";
 
   src = fetchFromGitHub {
     owner = "3MFConsortium";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-klssRLh4ktKSe1K3sHPlwXznU6GWe8csoioHT1xyYHQ=";
+    hash = "sha256-wq/dT/8m+em/qFoNNj6s5lyx/MgNeEBGSMBpuJiORqA=";
   };
+
+  patches = [
+    ./0001-Add-missing-algorithm-include.patch
+  ];
 
   nativeBuildInputs = [cmake ninja pkg-config];
 

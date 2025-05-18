@@ -34,6 +34,8 @@
     src = cadquery-src;
   };
 
+  cq-studio = self.callPackage ./cq-studio.nix { };
+
   nlopt = self.callPackage ./nlopt.nix { };
 
   pybind11-stubgen = self.callPackage ./OCP/pybind11-stubgen.nix {
@@ -48,7 +50,7 @@
 
   ocpsvg = self.callPackage ./ocpsvg.nix {};
 
-  py-lib3mf = self.callPackage ./py-lib3mf.nix {inherit lib3mf;};
+  py-lib3mf = self.callPackage ./py-lib3mf {inherit lib3mf;};
 
   trianglesolver = self.callPackage ./trianglesolver.nix {};
 

@@ -12,20 +12,22 @@
   numpy,
   ocp,
   ocpsvg,
+  lib3mf,
   py-lib3mf,
   scipy,
   svgpathtools,
+  sympy,
   trianglesolver,
   vtk,
 }: let
   pname = "build123d";
-  version = "0.9.1";
+  version = "0.9.2";
   src = fetchFromGitHub {
     owner = "gumyr";
     repo = pname;
-    rev = "v${version}";
+    rev = "67115111e2139540fff5560fceaf7ade9a1c3ac8";
     deepClone = true;
-    hash = "sha256-A4XgB10QVU/zv6TXILIQ73FyZ/msb7vDss3vXAEaJiA=";
+    hash = "sha256-bnygtEHgn7sgBU+By1kALMowrTxMl72Vt6aZDSs7cGI=";
   };
 in
   buildPythonPackage {
@@ -53,6 +55,7 @@ in
       py-lib3mf
       scipy
       svgpathtools
+      sympy
       trianglesolver
       vtk
     ];

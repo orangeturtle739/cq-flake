@@ -1,0 +1,43 @@
+From b3c61fc0b92bbe4745b1985b6efd04f8383c4089 Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Sat, 17 May 2025 12:22:44 -0700
+Subject: [PATCH] Add missing algorithm include.
+
+/build/source/Source/Model/Writer/v100/NMR_ResourceDependencySorter.cpp: In member function 'NMR::TopologicalSortResult NMR::CResourceDependencySorter::sort()':
+/build/source/Source/Model/Writer/v100/NMR_ResourceDependencySorter.cpp:77:22: error: 'find' is not a member of 'std'; did you mean 'bind'?
+   77 |             if (std::find(sortedResources.begin(), sortedResources.end(), modelResourceID) == sortedResources.end()) {
+---
+ Source/Model/Writer/v100/NMR_ResourceDependencySorter.cpp | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Source/Model/Writer/v100/NMR_ResourceDependencySorter.cpp b/Source/Model/Writer/v100/NMR_ResourceDependencySorter.cpp
+index b7e39678..ebf48d6e 100644
+--- a/Source/Model/Writer/v100/NMR_ResourceDependencySorter.cpp
++++ b/Source/Model/Writer/v100/NMR_ResourceDependencySorter.cpp
+@@ -29,6 +29,7 @@ Abstract:
+ NMR_ResourcDependencySorter resolves the dependencies between resources by
+ sorting them topologically.
+ --*/
++#include <algorithm>
+ 
+ #include "Model/Writer/v100/NMR_ResourceDependencySorter.h"
+ 
+@@ -72,7 +73,7 @@ namespace NMR
+ 
+         for (auto index : sortedIndices)
+         {
+-            
++
+             auto modelResourceID = indexToModelResourceID(index);
+             if (std::find(sortedResources.begin(), sortedResources.end(), modelResourceID) == sortedResources.end()) {
+                 sortedResources.push_back(modelResourceID);
+@@ -122,4 +123,4 @@ namespace NMR
+         return m_resourceIDToIndex.at(resourceID);
+     }
+ 
+-}  // namespace NMR
+\ No newline at end of file
++}  // namespace NMR
+-- 
+2.47.2
+
