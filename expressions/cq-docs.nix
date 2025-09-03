@@ -1,27 +1,20 @@
-{ lib
-  , stdenv
-  , isPy3k
-  , pythonOlder
-  , fetchFromGitHub
-  , cadquery
-  , makeFontsConf
-  , freefont_ttf
-  , sphinx
-  , sphinx_rtd_theme
-  , src
-  , sphinx-autodoc-typehints
-  , sphinxcadquery
-}:
+{ lib, stdenv, isPy3k, pythonOlder, fetchFromGitHub, cadquery, makeFontsConf
+, freefont_ttf, sphinx, sphinx_rtd_theme, src, sphinx-autodoc-typehints
+, sphinxcadquery }:
 
-let 
+let
   sphinx-build = sphinx.overrideAttrs (super: {
-      propagatedBuildInputs = super.propagatedBuildInputs or [] ++ [ sphinx_rtd_theme ];
-      postFixup = super.postFixup or "" + ''
-        # Do not propagate Python
-        rm $out/nix-support/propagated-build-inputs
-      '';
-    });
-  version = if (builtins.hasAttr "rev" src) then (builtins.substring 0 7 src.rev) else "local-dev";
+    propagatedBuildInputs = super.propagatedBuildInputs or [ ]
+      ++ [ sphinx_rtd_theme ];
+    postFixup = super.postFixup or "" + ''
+      # Do not propagate Python
+      rm $out/nix-support/propagated-build-inputs
+    '';
+  });
+  version = if (builtins.hasAttr "rev" src) then
+    (builtins.substring 0 7 src.rev)
+  else
+    "local-dev";
 
 in stdenv.mkDerivation rec {
   pname = "cq-docs";
@@ -35,9 +28,7 @@ in stdenv.mkDerivation rec {
     sphinxcadquery
   ];
 
-  FONTCONFIG_FILE = makeFontsConf {
-    fontDirectories = [ freefont_ttf ];
-  };
+  FONTCONFIG_FILE = makeFontsConf { fontDirectories = [ freefont_ttf ]; };
 
   disabled = !(isPy3k && (pythonOlder "3.9"));
 

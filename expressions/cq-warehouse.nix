@@ -1,11 +1,4 @@
-{
-  lib
-  , python
-  , buildPythonPackage
-  , fetchFromGitHub
-  , cadquery
-  , setuptools
-}:
+{ lib, python, buildPythonPackage, fetchFromGitHub, cadquery, setuptools }:
 buildPythonPackage rec {
   pname = "cq-warehouse";
   rev = "56fa36e2480fc510ac5dd3e60873bdb9797e9abe";

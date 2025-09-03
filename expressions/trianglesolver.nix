@@ -1,7 +1,4 @@
-{
-  buildPythonPackage,
-  fetchPypi,
-}:
+{ buildPythonPackage, fetchPypi, }:
 let
   pname = "trianglesolver";
   version = "1.2";
@@ -9,8 +6,7 @@ let
     inherit pname version;
     hash = "sha256-SvGKreV51cDWQ4mz5lrq8Gz/JjGXYszYWeMmhVmnauo=";
   };
-in
-buildPythonPackage {
+in buildPythonPackage {
   inherit src pname version;
   format = "setuptools";
 

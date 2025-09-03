@@ -1,17 +1,5 @@
-{
-  lib,
-  stdenv,
-  fetchFromGitHub,
-  cmake,
-  ninja,
-  automaticcomponenttoolkit,
-  pkg-config,
-  libzip,
-  gtest,
-  openssl,
-  libuuid,
-  libossp_uuid,
-}:
+{ lib, stdenv, fetchFromGitHub, cmake, ninja, automaticcomponenttoolkit
+, pkg-config, libzip, gtest, openssl, libuuid, libossp_uuid, }:
 stdenv.mkDerivation rec {
   pname = "lib3mf";
   version = "2.4.1";
@@ -23,13 +11,11 @@ stdenv.mkDerivation rec {
     hash = "sha256-wq/dT/8m+em/qFoNNj6s5lyx/MgNeEBGSMBpuJiORqA=";
   };
 
-  patches = [
-    ./0001-Add-missing-algorithm-include.patch
-  ];
+  patches = [ ./0001-Add-missing-algorithm-include.patch ];
 
-  nativeBuildInputs = [cmake ninja pkg-config];
+  nativeBuildInputs = [ cmake ninja pkg-config ];
 
-  outputs = ["out" "dev"];
+  outputs = [ "out" "dev" ];
 
   cmakeFlags = [
     "-DCMAKE_INSTALL_INCLUDEDIR=include/lib3mf"
@@ -40,17 +26,8 @@ stdenv.mkDerivation rec {
     "-DLIB3MF_TESTS=OFF"
   ];
 
-  buildInputs =
-    [
-      libzip
-      gtest
-      openssl
-    ]
-    ++ (
-      if stdenv.isDarwin
-      then [libossp_uuid]
-      else [libuuid]
-    );
+  buildInputs = [ libzip gtest openssl ]
+    ++ (if stdenv.isDarwin then [ libossp_uuid ] else [ libuuid ]);
 
   postPatch = ''
     # This lets us build the tests properly on aarch64-darwin.
@@ -67,10 +44,11 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "Reference implementation of the 3D Manufacturing Format file standard";
+    description =
+      "Reference implementation of the 3D Manufacturing Format file standard";
     homepage = "https://3mf.io/";
     license = licenses.bsd2;
-    maintainers = with maintainers; [gebner];
+    maintainers = with maintainers; [ gebner ];
     platforms = platforms.all;
   };
 }

@@ -1,12 +1,5 @@
-{
-  lib
-  , buildPythonPackage
-  , fetchFromGitHub
-  , python
-  , llvmPackages
-  , writeTextFile
-  , setuptools
-}:
+{ lib, buildPythonPackage, fetchFromGitHub, python, llvmPackages, writeTextFile
+, setuptools }:
 let
   setuppy = writeTextFile {
     name = "setup.py";
@@ -23,7 +16,8 @@ let
           packages=find_packages(),
           test_suite="tests",
       )
-    '';};
+    '';
+  };
 
 in buildPythonPackage rec {
   pname = "clang";
@@ -43,9 +37,7 @@ in buildPythonPackage rec {
     cp -rv ${setuppy} $sourceRoot/setup.py
   '';
 
-  propagatedBuildInputs = [
-    llvmPackages.clang-unwrapped.lib
-  ];
+  propagatedBuildInputs = [ llvmPackages.clang-unwrapped.lib ];
 
   preCheck = ''
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${llvmPackages.clang-unwrapped.lib}/lib

@@ -1,24 +1,6 @@
-{ lib
-  , stdenv
-  , src
-  , buildPythonPackage
-  , pythonOlder
-  , cmake
-  , ninja
-  , glibc
-  , opencascade-occt
-  , llvmPackages
-  , pybind11
-  , libglvnd
-  , xorg
-  , python
-  , writeTextFile
-  , pywrap
-  , vtk
-  , rapidjson
-  , lief
-  , path
-}:
+{ lib, stdenv, src, buildPythonPackage, pythonOlder, cmake, ninja, glibc
+, opencascade-occt, llvmPackages, pybind11, libglvnd, xorg, python
+, writeTextFile, pywrap, vtk, rapidjson, lief, path }:
 let
   # We need to use an unmodified version number for the dist-utils version so
   # that the version check in cadquery works
@@ -32,18 +14,9 @@ let
     pname = "ocp-dump-symbols";
     inherit version src;
 
-    nativeBuildInputs = [
-      lief
-      path
-      opencascade-occt
-    ];
+    nativeBuildInputs = [ lief path opencascade-occt ];
 
-    phases = [
-      "unpackPhase"
-      "buildPhase"
-      "installPhase"
-      "installCheckPhase"
-    ];
+    phases = [ "unpackPhase" "buildPhase" "installPhase" "installCheckPhase" ];
 
     dumpSymbols = ./dump_symbols.py;
 
@@ -60,24 +33,14 @@ let
 
   };
 
-
   # intermediate step, do pybind, cmake in the next step
   ocp-pybound = stdenv.mkDerivation rec {
     pname = "pybound-ocp";
     inherit version src;
 
-    phases = [
-      "unpackPhase"
-      "patchPhase"
-      "buildPhase"
-      "installPhase"
-    ];
+    phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
 
-    nativeBuildInputs = [
-      pywrap
-      rapidjson
-      ocp-dump-symbols
-    ];
+    nativeBuildInputs = [ pywrap rapidjson ocp-dump-symbols ];
 
     postPatch = ''
       cp ${ocp-dump-symbols}/symbols_mangled_linux.dat ./
@@ -88,27 +51,28 @@ let
       export PYBIND11_USE_CMAKE=1
     '';
 
-  # the order of the following includes is critical, but makes utterly zero sense to me. Order discovered by trial and error and hulk smashing the keyboard.
-    pywrapFlags = 
-    let
+    # the order of the following includes is critical, but makes utterly zero sense to me. Order discovered by trial and error and hulk smashing the keyboard.
+    pywrapFlags = let
       system = stdenv.hostPlatform.system;
-      compiler = if system == "x86_64-linux" then "x86_64-unknown-linux-gnu"
-                 else if system == "aarch64-linux" then "aarch64-unknown-linux-gnu"
-                 else (throw "unsupported system ${system}");
+      compiler = if system == "x86_64-linux" then
+        "x86_64-unknown-linux-gnu"
+      else if system == "aarch64-linux" then
+        "aarch64-unknown-linux-gnu"
+      else
+        (throw "unsupported system ${system}");
 
-    in builtins.concatStringsSep " " (
-      map (p: ''-i '' + p) [
-        "${rapidjson}/include"
-        "${vtk}/include/vtk/"
-        "${xorg.xorgproto}/include"
-        "${xorg.libX11.dev}/include"
-        "${libglvnd.dev}/include"
-        "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}"
-        "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}/${compiler}"
-        "${glibc.dev}/include"
-        # gcc-14-20241116 has its include files in lib/gcc/x86_64-unknown-linux-gnu/14.2.1/
-        "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include-fixed"
-        "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include"
+    in builtins.concatStringsSep " " (map (p: "-i " + p) [
+      "${rapidjson}/include"
+      "${vtk}/include/vtk/"
+      "${xorg.xorgproto}/include"
+      "${xorg.libX11.dev}/include"
+      "${libglvnd.dev}/include"
+      "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}"
+      "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}/${compiler}"
+      "${glibc.dev}/include"
+      # gcc-14-20241116 has its include files in lib/gcc/x86_64-unknown-linux-gnu/14.2.1/
+      "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include-fixed"
+      "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include"
     ]);
 
     buildPhase = ''
@@ -133,21 +97,10 @@ let
 
     # do not put glibc.dev in here https://discourse.nixos.org/t/how-to-get-this-basic-c-build-to-work-in-a-nix-shell/12262/3
     # https://github.com/NixOS/nixpkgs/pull/28748
-    nativeBuildInputs = [
-      cmake
-      ninja
-      pywrap
-      pybind11
-      python
-      rapidjson
-    ];
+    nativeBuildInputs = [ cmake ninja pywrap pybind11 python rapidjson ];
 
-    buildInputs = [
-      libglvnd.dev
-      xorg.libX11.dev
-      xorg.xorgproto
-      vtk
-    ] ++ opencascade-occt.buildInputs ++ vtk.buildInputs;
+    buildInputs = [ libglvnd.dev xorg.libX11.dev xorg.xorgproto vtk ]
+      ++ opencascade-occt.buildInputs ++ vtk.buildInputs;
 
     preConfigure = ''
       export CMAKE_PREFIX_PATH=${pybind11}/share/cmake/pybind11:$CMAKE_PREFIX_PATH
@@ -162,9 +115,7 @@ let
     # I don't think I need this, but keep it here incase I notice multithread problems later:
     # NIX_CFLAGS_LINK = "-lpthread -ldl";
 
-    propagatedBuildInputs = [
-      opencascade-occt
-    ];
+    propagatedBuildInputs = [ opencascade-occt ];
 
     cmakeFlags = [
       "-S ../OCP"
@@ -225,7 +176,7 @@ in buildPythonPackage {
   inherit version;
   src = ocp-result;
 
-  SETUPTOOLS_SCM_PRETEND_VERSION="${base-version}";
+  SETUPTOOLS_SCM_PRETEND_VERSION = "${base-version}";
 
   prePatch = ''
     cp ${setuppy} ./setup.py
@@ -236,7 +187,8 @@ in buildPythonPackage {
   pythonImportsCheck = [ "OCP" "OCP.gp" ];
 
   meta = with lib; {
-    description = "Python wrapper for Opencascade Technology ${version} generated using pywrap";
+    description =
+      "Python wrapper for Opencascade Technology ${version} generated using pywrap";
     homepage = "https://github.com/CadQuery/OCP";
     license = licenses.asl20;
     maintainers = with maintainers; [ marcus7070 ];

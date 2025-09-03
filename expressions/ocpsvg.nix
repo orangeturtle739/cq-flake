@@ -1,15 +1,8 @@
-{
-  buildPythonPackage,
-  fetchPypi,
-  # Buildtime dependencies
-  git,
-  pytestCheckHook,
-  setuptools-scm,
-  # Runtime dependencies
-  ocp,
-  svgpathtools,
-  svgelements,
-}:
+{ buildPythonPackage, fetchPypi,
+# Buildtime dependencies
+git, pytestCheckHook, setuptools-scm,
+# Runtime dependencies
+ocp, svgpathtools, svgelements, }:
 let
   pname = "ocpsvg";
   version = "0.5.0";
@@ -17,8 +10,7 @@ let
     inherit pname version;
     hash = "sha256-XNjb7Iv1kNNzqCquvqskGDgYWqsE7ihZ8zudeVa7+6Y=";
   };
-in
-buildPythonPackage {
+in buildPythonPackage {
   inherit src pname version;
   pyproject = true;
 
@@ -31,7 +23,7 @@ buildPythonPackage {
 
   nativeCheckInputs = [ pytestCheckHook ];
 
-  dependencies = [ocp svgpathtools svgelements ];
+  dependencies = [ ocp svgpathtools svgelements ];
 
 }
 

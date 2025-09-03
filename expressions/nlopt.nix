@@ -1,13 +1,5 @@
-{ lib
-  , stdenv
-  , fetchFromGitHub
-  , cmake
-  , octave ? null
-  , python
-  , swig
-  , numpy
-  , buildPythonPackage
-}:
+{ lib, stdenv, fetchFromGitHub, cmake, octave ? null, python, swig, numpy
+, buildPythonPackage }:
 
 buildPythonPackage rec {
   pname = "nlopt";
@@ -22,19 +14,11 @@ buildPythonPackage rec {
 
   format = "other";
 
-  nativeBuildInputs = [
-    cmake
-    swig
-  ];
+  nativeBuildInputs = [ cmake swig ];
 
-  buildInputs = [
-    octave
-    python
-  ];
+  buildInputs = [ octave python ];
 
-  propagatedBuildInputs = [
-    numpy
-  ];
+  propagatedBuildInputs = [ numpy ];
 
   configureFlags = [
     "--with-cxx"

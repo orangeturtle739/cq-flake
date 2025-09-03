@@ -1,11 +1,6 @@
-{ lib
-, mkDerivationWith
-, python3Packages
-  # , fetchFromGitHub
-, makeDesktopItem
-, copyDesktopItems
-, src
-}:
+{ lib, mkDerivationWith, python3Packages
+# , fetchFromGitHub
+, makeDesktopItem, copyDesktopItems, src }:
 
 mkDerivationWith python3Packages.buildPythonApplication {
   pname = "cq-editor";
@@ -50,9 +45,7 @@ mkDerivationWith python3Packages.buildPythonApplication {
 
   build-system = [ python3Packages.setuptools ];
 
-  nativeBuildInputs = [
-    copyDesktopItems
-  ];
+  nativeBuildInputs = [ copyDesktopItems ];
 
   # cq-editor crashes when trying to use Wayland, so force xcb
   qtWrapperArgs = [ "--set QT_QPA_PLATFORM xcb" ];

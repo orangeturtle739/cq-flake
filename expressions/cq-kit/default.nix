@@ -1,11 +1,4 @@
-{
-  lib
-  , buildPythonPackage
-  , fetchFromGitHub
-  , cadquery
-  , pytestCheckHook
-  , rich
-}:
+{ lib, buildPythonPackage, fetchFromGitHub, cadquery, pytestCheckHook, rich }:
 buildPythonPackage rec {
   pname = "cq-kit";
   rev = "ad1e12b919911f1145262d85adf329995f2ed59e";
