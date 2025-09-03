@@ -54,16 +54,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1742889210,
-        "narHash": "sha256-hw63HnwnqU3ZQfsMclLhMvOezpM7RSB0dMAtD5/sOiw=",
+        "lastModified": 1751274312,
+        "narHash": "sha256-/bVBlRpECLVzjV19t5KMdMFWSwKLtb5RyXdjz3LJT+g=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "698214a32beb4f4c8e3942372c694f40848b360d",
+        "rev": "50ab793786d9de88ee30ec4e4c24fb4236fc2674",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "ref": "nixos-24.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -120,11 +120,11 @@
     "pywrap-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1736233855,
-        "narHash": "sha256-u+P/SUGpYhzA1oVbEv26DF8PBEpsotEk4iXIXZhgzHc=",
+        "lastModified": 1754377202,
+        "narHash": "sha256-HvZMrA6n0s7JBBQkV8o9h+6BAM67Tc61at2AQC3o3r0=",
         "owner": "CadQuery",
         "repo": "pywrap",
-        "rev": "9c9ca5b8aa0d9a6687394897815a682b8c319fb0",
+        "rev": "5e134c526b3bbd1758d8f63e518bc16c3d7ff352",
         "type": "github"
       },
       "original": {

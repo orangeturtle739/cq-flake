@@ -6,7 +6,7 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
     cadquery-src = {
       url = "github:CadQuery/cadquery/471ab6fcc79b6ce64b857d33d06202c030cf5459";
