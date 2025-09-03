@@ -1,24 +1,16 @@
-{
-  lib
-  , python
-  , buildPythonPackage
-  , fetchFromGitHub
-  , cadquery
-  , setuptools
-}:
+{ lib, python, buildPythonPackage, fetchFromGitHub, cadquery, setuptools }:
 buildPythonPackage rec {
   pname = "cq-warehouse";
-  rev = "56fa36e2480fc510ac5dd3e60873bdb9797e9abe";
-  version = "git+56fa36e";
+  rev = "daa46507ecc429c0e2dce11d9d5ffd09b12a42af";
+  version = "git+daa4650";
   src = fetchFromGitHub {
     owner = "gumyr";
     repo = "cq_warehouse";
     inherit rev;
-    sha256 = "sha256-RHiQqmQ5+1IRd9gqlBsgBErmKy6Eo5XHrvRyNf+1m/4=";
+    sha256 = lib.fakeHash;
   };
 
   build-system = [ setuptools ];
-
   format = "pyproject";
 
   propagatedBuildInputs = [ cadquery ];

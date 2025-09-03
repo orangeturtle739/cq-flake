@@ -3,34 +3,16 @@
     "cadquery-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1741533881,
-        "narHash": "sha256-LNzo356Chh52Soi91i/z5fD9mDlh3P0saUieS5f399g=",
+        "lastModified": 1779026799,
+        "narHash": "sha256-+FoXWscnsY/x5yQGnRDTl6CDWH+Q/y9MFOctVncCH9E=",
         "owner": "CadQuery",
         "repo": "cadquery",
-        "rev": "471ab6fcc79b6ce64b857d33d06202c030cf5459",
+        "rev": "8c17892ed68d4e5a19fe10fd0c0eb2a23f63db5a",
         "type": "github"
       },
       "original": {
         "owner": "CadQuery",
         "repo": "cadquery",
-        "rev": "471ab6fcc79b6ce64b857d33d06202c030cf5459",
-        "type": "github"
-      }
-    },
-    "cq-editor-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1739812831,
-        "narHash": "sha256-6cFVT+HIRoht1XPY+mvk9iTQ50Q8kqx9XxgNsRMFQ9c=",
-        "owner": "CadQuery",
-        "repo": "CQ-editor",
-        "rev": "7c92ec9d967f0f1e295a0f2dcf779ea871338e08",
-        "type": "github"
-      },
-      "original": {
-        "owner": "CadQuery",
-        "ref": "0.4.0",
-        "repo": "CQ-editor",
         "type": "github"
       }
     },
@@ -54,11 +36,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1742889210,
-        "narHash": "sha256-hw63HnwnqU3ZQfsMclLhMvOezpM7RSB0dMAtD5/sOiw=",
+        "lastModified": 1778869304,
+        "narHash": "sha256-30sZNZoA1cqF5JNO9fVX+wgiQYjB7HJqqJ4ztCDeBZE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "698214a32beb4f4c8e3942372c694f40848b360d",
+        "rev": "d233902339c02a9c334e7e593de68855ad26c4cb",
         "type": "github"
       },
       "original": {
@@ -71,78 +53,42 @@
     "ocp-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1739132137,
-        "narHash": "sha256-vWAqCGgs7YnwHRhPAXkBQqCs+Y3zk4BMu1boZo3PLGA=",
-        "owner": "cadquery",
-        "repo": "ocp",
-        "rev": "01055e099a3b1a34da38bb1f5457f06a2d4c7a18",
-        "type": "github"
+        "lastModified": 1770832214,
+        "narHash": "sha256-TKvJ03WHVuUAMTHLr2KWjKU1rBoSOfpAIxjjpYKN2nQ=",
+        "ref": "refs/heads/master",
+        "rev": "d69b064a3a604ebf245b1f3b14fb54c835a3a571",
+        "revCount": 234,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/cadquery/ocp"
       },
       "original": {
-        "owner": "cadquery",
-        "ref": "7.8.1.2",
-        "repo": "ocp",
-        "type": "github"
+        "rev": "d69b064a3a604ebf245b1f3b14fb54c835a3a571",
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/cadquery/ocp"
       }
     },
-    "ocp-stubs-src": {
+    "ocp-stubs": {
       "flake": false,
       "locked": {
-        "lastModified": 1672527176,
-        "narHash": "sha256-m9Rg36GYlYfwEfF0PQJWEXf8TyM5HmjeuhJCODiurvY=",
-        "owner": "cadquery",
-        "repo": "ocp-stubs",
-        "rev": "e838ff400d5ee2f4a0579d2a713b19311855288f",
-        "type": "github"
+        "lastModified": 1770941290,
+        "narHash": "sha256-gfZFv/evrLHX5TSjAmc6ap45nCbAuNUGkb989BrfqhY=",
+        "type": "tarball",
+        "url": "https://github.com/CadQuery/OCP/releases/download/7.9.3.1/OCP_src_stubs_Linux.zip"
       },
       "original": {
-        "owner": "cadquery",
-        "repo": "ocp-stubs",
-        "type": "github"
-      }
-    },
-    "pybind11-stubgen-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1700678104,
-        "narHash": "sha256-76u1GcHPPh8oYQeQZDJ4K/so0U7F6rznZ1xa6syqI9s=",
-        "owner": "CadQuery",
-        "repo": "pybind11-stubgen",
-        "rev": "6dc681d838d3ec9a8a9aa4260c8392d3fb700ff0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "CadQuery",
-        "repo": "pybind11-stubgen",
-        "type": "github"
-      }
-    },
-    "pywrap-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1736233855,
-        "narHash": "sha256-u+P/SUGpYhzA1oVbEv26DF8PBEpsotEk4iXIXZhgzHc=",
-        "owner": "CadQuery",
-        "repo": "pywrap",
-        "rev": "9c9ca5b8aa0d9a6687394897815a682b8c319fb0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "CadQuery",
-        "repo": "pywrap",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://github.com/CadQuery/OCP/releases/download/7.9.3.1/OCP_src_stubs_Linux.zip"
       }
     },
     "root": {
       "inputs": {
         "cadquery-src": "cadquery-src",
-        "cq-editor-src": "cq-editor-src",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
         "ocp-src": "ocp-src",
-        "ocp-stubs-src": "ocp-stubs-src",
-        "pybind11-stubgen-src": "pybind11-stubgen-src",
-        "pywrap-src": "pywrap-src"
+        "ocp-stubs": "ocp-stubs"
       }
     },
     "systems": {

@@ -1,35 +1,18 @@
-{
-  lib
-  , buildPythonPackage
-  , pythonOlder
-  , src
-  , clang
-  , pybind11
-  , joblib
-  , toml
-  , cmake
-  , ninja
-  , click
-  , jinja2
-  , logzero
-  , pandas
-  , path
-  , pyparsing
-  , schema
-  , tqdm
-  , toposort
-  , llvmPackages
-  , python
-  , fetchpatch
-}:
+{ lib, buildPythonPackage, pythonOlder, src, llvmPackages, libclang, pybind11
+, joblib, toml, cmake, ninja, click, jinja2, logzero, pandas, path, pyparsing
+, schema, tqdm, toposort, python, fetchpatch, setuptools }:
 
-buildPythonPackage rec {
-  version = "git-" + builtins.substring 0 7 src.rev;
-  pname = "pywrap";
+let libclang_new = libclang.override { inherit llvmPackages; };
+
+in buildPythonPackage rec {
+  name = "pywrap";
   inherit src;
 
+  pyproject = true;
+  build-system = [ setuptools ];
+
   propagatedBuildInputs = [
-    clang
+    libclang_new
     pybind11
     joblib
     toml
@@ -44,14 +27,9 @@ buildPythonPackage rec {
     schema
     tqdm
     toposort
-    llvmPackages.libclang
   ];
 
   dontUseCmakeConfigure = true;
-
-  patches = [
-    ./less-warnings.patch
-  ];
 
   # do I need this at all?
   postPatch = ''
@@ -60,9 +38,8 @@ buildPythonPackage rec {
 
   pythonImportCheck = [ "bindgen" ];
 
-  makeWrapperArgs = [
-    ''--add-flags "-l ${llvmPackages.libclang.lib}/lib/libclang.so"''
-  ];
+  makeWrapperArgs =
+    [ ''--add-flags "-l ${llvmPackages.libclang.lib}/lib/libclang.so"'' ];
 
   meta = with lib; {
     description = "C++ binding generator based on libclang and pybind11";

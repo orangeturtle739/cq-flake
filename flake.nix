@@ -1,93 +1,67 @@
 {
   description = "CQ-editor and CadQuery";
 
-  nixConfig = {
-    extra-experimental-features = "nix-command flakes";
-  };
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     cadquery-src = {
-      url = "github:CadQuery/cadquery/471ab6fcc79b6ce64b857d33d06202c030cf5459";
-      flake = false;
-    };
-    cq-editor-src = {
-      url = "github:CadQuery/CQ-editor/0.4.0";
+      url = "github:CadQuery/cadquery";
       flake = false;
     };
     ocp-src = {
-      url = "github:cadquery/ocp/7.8.1.2";
+      url =
+        "git+https://github.com/cadquery/ocp?submodules=1&rev=d69b064a3a604ebf245b1f3b14fb54c835a3a571";
       flake = false;
     };
-    ocp-stubs-src = {
-      url = "github:cadquery/ocp-stubs";
-      flake = false;
-    };
-    pywrap-src = {
-      url = "github:CadQuery/pywrap";
-      flake = false;
-    };
-    pybind11-stubgen-src = {
-      url = "github:CadQuery/pybind11-stubgen";
+    ocp-stubs = {
+      url =
+        "https://github.com/CadQuery/OCP/releases/download/7.9.3.1/OCP_src_stubs_Linux.zip";
       flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... } @ inputs:
+  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     let
-      # someone else who can do the testing might want to extend this to other systems
       systems = [ "aarch64-linux" "x86_64-linux" ];
-      overlay = final: prev: {
-        # TODO: This was here but not actually referenced by anything.
-        # scotch = prev.scotch.overrideAttrs (oldAttrs: {
-        #   buildFlags = ["scotch ptscotch esmumps ptesmumps"];
-        #   installFlags = ["prefix=\${out} scotch ptscotch esmumps ptesmumps" ];
-        # } );
-        opencascade-occt = final.callPackage ./expressions/opencascade-occt { };
-        lib3mf = final.callPackage ./expressions/lib3mf {};
-        pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [(
-          import expressions/py-overrides.nix {
-            inherit (inputs) pywrap-src ocp-src ocp-stubs-src cadquery-src pybind11-stubgen-src;
-            inherit (final) fetchFromGitHub;
-            # NOTE(vinszent): Latest dev env uses LLVM 15 (https://github.com/CadQuery/OCP/blob/master/environment.devenv.yml)
-            llvmPackages = final.llvmPackages_15;
-            occt = final.opencascade-occt;
-            casadi = prev.casadi.override { pythonSupport=true; };
-            lib3mf = final.lib3mf;
-          }
-        )];
-        cq-editor = final.libsForQt5.callPackage ./expressions/cq-editor.nix {
-          src = inputs.cq-editor-src;
+      overlay = final: prev: rec {
+        opencascade-occt-vtk = prev.opencascade-occt.override {
+          withVtk = true;
+          vtk = prev.vtk;
         };
-        yacv-env = final.python3.withPackages (pkgs: [pkgs.yacv-server]);
-        yacv-frontend = final.callPackage ./expressions/yacv/frontend.nix {};
+        vtk-occt-vtk = prev.vtk.override {
+          opencascade-occt = opencascade-occt-vtk;
+          pythonSupport = true;
+        };
+        pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+          (import expressions/py-overrides.nix {
+            inherit (inputs) ocp-src ocp-stubs cadquery-src;
+            llvmPackages = final.llvmPackages_21;
+            casadi = prev.casadi.override { pythonSupport = true; };
+          })
+        ];
         freeimage = prev.freeimage.overrideAttrs (oldAttrs: rec {
-          meta = (removeAttrs oldAttrs.meta ["knownVulnerabilities"]);
+          meta = (removeAttrs oldAttrs.meta [ "knownVulnerabilities" ]);
         });
       };
     in {
       overlays.default = overlay;
-    } // flake-utils.lib.eachSystem systems ( system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [overlay];
-            config.permittedInsecurePackages = [
-              "freeimage-3.18.0-unstable-2024-04-18"
-            ];
-          };
-        in rec {
-          packages = {
-            inherit (pkgs.python3.pkgs) cadquery cq-kit cq-warehouse build123d cq-studio;
-            inherit (pkgs) python3 cq-editor yacv-env yacv-frontend;
-            python = pkgs.python3;
-          };
-
-          legacyPackages = pkgs;
-
-          defaultPackage = packages.cq-editor;
-          apps.default = flake-utils.lib.mkApp { drv = defaultPackage; };
-        }
-      );
+    } // flake-utils.lib.eachSystem systems (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ overlay ];
+          config.permittedInsecurePackages =
+            [ "freeimage-3.18.0-unstable-2024-04-18" ];
+        };
+      in rec {
+        packages = {
+          inherit (pkgs.python3.pkgs)
+            cadquery cq-kit cq-warehouse build123d cq-studio;
+          inherit (pkgs) python3;
+          python = pkgs.python3;
+          default = packages.cq-studio;
+        };
+        legacyPackages = pkgs;
+        apps.default = flake-utils.lib.mkApp { drv = packages.default; };
+      });
 }

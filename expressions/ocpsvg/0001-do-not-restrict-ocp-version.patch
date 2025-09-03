@@ -1,0 +1,25 @@
+From 15ba4106b677b25fc7f0f199294599f6ad3fe3af Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Fri, 6 Mar 2026 06:12:31 -0800
+Subject: [PATCH] do not restrict ocp version
+
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 3365e8b..e200948 100755
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -5,7 +5,7 @@ readme = "readme-pypi.md"
+ version = "0.6.0"
+ requires-python = ">=3.10"
+ dependencies = [
+-    "cadquery_ocp_proxy >= 7.9, < 8.0",
++    "ocp",
+     "svgelements >= 1.9.1, <2",
+ ]
+ 
+-- 
+2.51.2
+
