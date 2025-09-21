@@ -1,6 +1,4 @@
-{ buildPythonPackage, fetchurl,
-# Buildtime dependencies
-setuptools, lib3mf, unzip, lib }:
+{ buildPythonPackage, fetchurl, setuptools, lib3mf, unzip, lib }:
 let
   pname = "py-lib3mf";
   version = "2.4.1";
@@ -17,7 +15,6 @@ in buildPythonPackage {
   nativeBuildInputs = [ unzip setuptools ];
 
   patchPhase = ''
-    pwd
     cp ${lib3mf}/lib/lib3mf.so.${version}.0 lib3mf/lib3mf.so
     cp ${./pyproject.toml} pyproject.toml
     cp ${./MANIFEST.in} MANIFEST.in

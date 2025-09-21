@@ -2,8 +2,6 @@
 , fetchFromGitHub, casadi, pybind11-stubgen-src, lib3mf }:
 self: super: rec {
 
-  # clang = self.callPackage ./clang.nix { inherit llvmPackages; };
-
   pywrap = self.callPackage ./pywrap {
     inherit llvmPackages;
     src = pywrap-src;
@@ -20,8 +18,6 @@ self: super: rec {
   cadquery = self.callPackage ./cadquery.nix { src = cadquery-src; };
 
   cq-studio = self.callPackage ./cq-studio.nix { };
-
-  # nlopt = self.callPackage ./nlopt.nix { };
 
   pybind11-stubgen =
     self.callPackage ./OCP/pybind11-stubgen.nix { src = pybind11-stubgen-src; };

@@ -14,7 +14,6 @@ in buildPythonPackage rec {
 
   propagatedBuildInputs = [
     libclang_new
-    # llvmPackages.clang
     pybind11
     joblib
     toml
@@ -32,8 +31,6 @@ in buildPythonPackage rec {
   ];
 
   dontUseCmakeConfigure = true;
-
-  # patches = [ ./less-warnings.patch ];
 
   # do I need this at all?
   postPatch = ''

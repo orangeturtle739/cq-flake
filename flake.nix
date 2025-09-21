@@ -30,15 +30,8 @@
 
   outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     let
-      # someone else who can do the testing might want to extend this to other systems
       systems = [ "aarch64-linux" "x86_64-linux" ];
       overlay = final: prev: {
-        # TODO: This was here but not actually referenced by anything.
-        # scotch = prev.scotch.overrideAttrs (oldAttrs: {
-        #   buildFlags = ["scotch ptscotch esmumps ptesmumps"];
-        #   installFlags = ["prefix=\${out} scotch ptscotch esmumps ptesmumps" ];
-        # } );
-        # opencascade-occt = final.callPackage ./expressions/opencascade-occt { };
         lib3mf = final.callPackage ./expressions/lib3mf { };
         pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
           (import expressions/py-overrides.nix {
@@ -46,7 +39,6 @@
               pywrap-src ocp-src ocp-stubs-src cadquery-src
               pybind11-stubgen-src;
             inherit (final) fetchFromGitHub;
-            # NOTE(vinszent): Latest dev env uses LLVM 15 (https://github.com/CadQuery/OCP/blob/master/environment.devenv.yml)
             llvmPackages = final.llvmPackages_20;
             occt = final.opencascade-occt;
             casadi = prev.casadi.override { pythonSupport = true; };
