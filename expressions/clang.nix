@@ -30,6 +30,9 @@ in buildPythonPackage rec {
     sha256 = "sha256-wjuZQyXQ/jsmvy6y1aksCcEDXGBjuhpgngF3XQJ/T4s=";
   };
 
+  format = "pyproject";
+  build-system = [ setuptools ];
+
   unpackPhase = ''
     export sourceRoot=$PWD/source
     mkdir $sourceRoot
@@ -48,5 +51,6 @@ in buildPythonPackage rec {
     homepage = "https://github.com/llvm/llvm-project";
     license = [ licenses.ncsa ];
     maintainers = [ maintainers.marcus7070 ];
+    mainProgram = "clang";
   };
 }

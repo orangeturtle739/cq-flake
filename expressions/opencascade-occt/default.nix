@@ -1,8 +1,9 @@
 # adapted from github:conda-forge/occt-feedstock which is the canonical cadquery source.
 { stdenv, lib, fetchurl, fetchpatch, cmake, ninja, tcl, tk, libGL, libGLU
-, libXext, libXmu, libXi, vtk, xorg, freetype, freeimage, fontconfig
-, tbb_2021_11, rapidjson, glew }:
-let vtk_version = lib.versions.majorMinor vtk.version;
+, libXext, libXmu, libXi, vtk-full, xorg, freetype, freeimage, fontconfig
+, tbb_2021, rapidjson, glew }:
+# let vtk_version = lib.versions.majorMinor vtk.version;
+let
 in stdenv.mkDerivation rec {
   pname = "opencascade-occt";
   version = "7.8.1";
@@ -24,15 +25,15 @@ in stdenv.mkDerivation rec {
     libXext
     libXmu
     libXi
-    vtk
+    # vtk
     xorg.libXt
     freetype
-    freeimage
+    # freeimage
     fontconfig
-    tbb_2021_11
+    tbb_2021
     rapidjson
     glew
-  ] ++ vtk.buildInputs;
+  ]; # ++ vtk.buildInputs;
 
   patches = [
     (fetchpatch {
@@ -53,8 +54,8 @@ in stdenv.mkDerivation rec {
     "-D USE_TBB:BOOL=ON"
     "-D BUILD_RELEASE_DISABLE_EXCEPTIONS=OFF"
     "-D USE_VTK:BOOL=ON"
-    "-D 3RDPARTY_VTK_LIBRARY_DIR:FILEPATH=${vtk}/lib"
-    "-D 3RDPARTY_VTK_INCLUDE_DIR:FILEPATH=${vtk}/include/vtk"
+    "-D 3RDPARTY_VTK_LIBRARY_DIR:FILEPATH=${vtk-full}/lib"
+    "-D 3RDPARTY_VTK_INCLUDE_DIR:FILEPATH=${vtk-full}/include/vtk"
     ''-D VTK_RENDERING_BACKEND:STRING="OpenGL2"''
     "-D USE_FREEIMAGE:BOOL=ON"
     "-D USE_RAPIDJSON:BOOL=ON"

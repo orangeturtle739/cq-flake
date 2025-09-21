@@ -11,7 +11,6 @@ buildPythonPackage rec {
   };
 
   build-system = [ setuptools ];
-
   format = "pyproject";
 
   propagatedBuildInputs = [ cadquery ];

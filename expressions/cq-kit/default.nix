@@ -1,4 +1,5 @@
-{ lib, buildPythonPackage, fetchFromGitHub, cadquery, pytestCheckHook, rich }:
+{ lib, buildPythonPackage, fetchFromGitHub, cadquery, pytestCheckHook, rich
+, setuptools }:
 buildPythonPackage rec {
   pname = "cq-kit";
   rev = "ad1e12b919911f1145262d85adf329995f2ed59e";
@@ -15,6 +16,9 @@ buildPythonPackage rec {
     substituteInPlace cqkit/cq_discrete.py \
       --replace-fail "tri.Value" "tri"
   '';
+
+  pyproject = true;
+  build-system = [ setuptools ];
 
   propagatedBuildInputs = [ cadquery ];
 

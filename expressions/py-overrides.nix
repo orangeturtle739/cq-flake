@@ -2,7 +2,7 @@
 , fetchFromGitHub, casadi, pybind11-stubgen-src, lib3mf }:
 self: super: rec {
 
-  clang = self.callPackage ./clang.nix { inherit llvmPackages; };
+  # clang = self.callPackage ./clang.nix { inherit llvmPackages; };
 
   pywrap = self.callPackage ./pywrap {
     inherit llvmPackages;
@@ -10,7 +10,7 @@ self: super: rec {
   };
 
   ocp = self.callPackage ./OCP {
-    llvmPackages = llvmPackages;
+    # llvmPackages = llvmPackages;
     src = ocp-src;
     opencascade-occt = occt;
   };
@@ -21,7 +21,7 @@ self: super: rec {
 
   cq-studio = self.callPackage ./cq-studio.nix { };
 
-  nlopt = self.callPackage ./nlopt.nix { };
+  # nlopt = self.callPackage ./nlopt.nix { };
 
   pybind11-stubgen =
     self.callPackage ./OCP/pybind11-stubgen.nix { src = pybind11-stubgen-src; };
@@ -29,8 +29,6 @@ self: super: rec {
   cq-kit = self.callPackage ./cq-kit { };
 
   cq-warehouse = self.callPackage ./cq-warehouse.nix { };
-
-  svgpathtools = self.callPackage ./svgpathtools.nix { };
 
   ocpsvg = self.callPackage ./ocpsvg.nix { };
 

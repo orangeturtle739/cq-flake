@@ -1,6 +1,7 @@
-{ lib, buildPythonPackage, setuptools_scm, isPy3k, pythonOlder, fetchFromGitHub
-, makeFontsConf, freefont_ttf, pytestCheckHook, pytest-xdist, ocp, casadi, ezdxf
-, ipython, src, nptyping, typish, vtk, nlopt, multimethod, docutils, path }:
+{ lib, buildPythonPackage, setuptools, setuptools_scm, isPy3k, pythonOlder
+, fetchFromGitHub, makeFontsConf, freefont_ttf, pytestCheckHook, pytest-xdist
+, ocp, casadi, ezdxf, ipython, src, nptyping, typish, vtk, nlopt, multimethod
+, docutils, path }:
 
 buildPythonPackage rec {
   pname = "cadquery";
@@ -9,6 +10,9 @@ buildPythonPackage rec {
   else
     "local-dev";
   inherit src;
+
+  pyproject = true;
+  build-system = [ setuptools ];
 
   SETUPTOOLS_SCM_PRETEND_VERSION = "${version}";
 

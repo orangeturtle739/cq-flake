@@ -1,5 +1,5 @@
-{ lib, stdenv, src, buildPythonPackage, pythonOlder, cmake, ninja, glibc
-, opencascade-occt, llvmPackages, pybind11, libglvnd, xorg, python
+{ lib, stdenv, src, buildPythonPackage, setuptools, pythonOlder, cmake, ninja
+, glibc, opencascade-occt, pybind11, libglvnd, xorg, python
 , writeTextFile, pywrap, vtk, rapidjson, lief, path }:
 let
   # We need to use an unmodified version number for the dist-utils version so
@@ -175,6 +175,9 @@ in buildPythonPackage {
   pname = "OCP";
   inherit version;
   src = ocp-result;
+
+  pyproject = true;
+  build-system = [ setuptools ];
 
   SETUPTOOLS_SCM_PRETEND_VERSION = "${base-version}";
 

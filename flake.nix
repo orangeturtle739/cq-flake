@@ -4,14 +4,10 @@
   nixConfig = { extra-experimental-features = "nix-command flakes"; };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     cadquery-src = {
-      url = "github:CadQuery/cadquery/471ab6fcc79b6ce64b857d33d06202c030cf5459";
-      flake = false;
-    };
-    cq-editor-src = {
-      url = "github:CadQuery/CQ-editor/0.4.0";
+      url = "github:CadQuery/cadquery";
       flake = false;
     };
     ocp-src = {
@@ -42,7 +38,7 @@
         #   buildFlags = ["scotch ptscotch esmumps ptesmumps"];
         #   installFlags = ["prefix=\${out} scotch ptscotch esmumps ptesmumps" ];
         # } );
-        opencascade-occt = final.callPackage ./expressions/opencascade-occt { };
+        # opencascade-occt = final.callPackage ./expressions/opencascade-occt { };
         lib3mf = final.callPackage ./expressions/lib3mf { };
         pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
           (import expressions/py-overrides.nix {
@@ -51,15 +47,12 @@
               pybind11-stubgen-src;
             inherit (final) fetchFromGitHub;
             # NOTE(vinszent): Latest dev env uses LLVM 15 (https://github.com/CadQuery/OCP/blob/master/environment.devenv.yml)
-            llvmPackages = final.llvmPackages_15;
+            llvmPackages = final.llvmPackages_20;
             occt = final.opencascade-occt;
             casadi = prev.casadi.override { pythonSupport = true; };
             lib3mf = final.lib3mf;
           })
         ];
-        cq-editor = final.libsForQt5.callPackage ./expressions/cq-editor.nix {
-          src = inputs.cq-editor-src;
-        };
         yacv-env = final.python3.withPackages (pkgs: [ pkgs.yacv-server ]);
         yacv-frontend = final.callPackage ./expressions/yacv/frontend.nix { };
         freeimage = prev.freeimage.overrideAttrs (oldAttrs: rec {
@@ -80,13 +73,13 @@
         packages = {
           inherit (pkgs.python3.pkgs)
             cadquery cq-kit cq-warehouse build123d cq-studio;
-          inherit (pkgs) python3 cq-editor yacv-env yacv-frontend;
+          inherit (pkgs) python3 yacv-frontend;
           python = pkgs.python3;
         };
 
         legacyPackages = pkgs;
 
-        defaultPackage = packages.cq-editor;
+        defaultPackage = packages.cq-studio;
         apps.default = flake-utils.lib.mkApp { drv = defaultPackage; };
       });
 }
