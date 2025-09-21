@@ -1,12 +1,10 @@
-{ lib, buildPythonPackage, pythonOlder, src, llvmPackages, libclang, pybind11, joblib, toml
-, cmake, ninja, click, jinja2, logzero, pandas, path, pyparsing, schema, tqdm
-, toposort, python, fetchpatch, setuptools }:
+{ lib, buildPythonPackage, pythonOlder, src, llvmPackages, libclang, pybind11
+, joblib, toml, cmake, ninja, click, jinja2, logzero, pandas, path, pyparsing
+, schema, tqdm, toposort, python, fetchpatch, setuptools }:
 
-let
-  libclang_new = libclang.override { inherit llvmPackages; };
-in
+let libclang_new = libclang.override { inherit llvmPackages; };
 
-buildPythonPackage rec {
+in buildPythonPackage rec {
   version = "git-" + builtins.substring 0 7 src.rev;
   pname = "pywrap";
   inherit src;

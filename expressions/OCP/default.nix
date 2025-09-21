@@ -1,6 +1,6 @@
 { lib, stdenv, src, buildPythonPackage, setuptools, pythonOlder, cmake, ninja
-, glibc, opencascade-occt, pybind11, libglvnd, xorg, python
-, writeTextFile, pywrap, vtk, rapidjson, lief, path }:
+, glibc, opencascade-occt, pybind11, libglvnd, xorg, python, writeTextFile
+, pywrap, vtk, rapidjson, lief, path }:
 let
   # We need to use an unmodified version number for the dist-utils version so
   # that the version check in cadquery works
