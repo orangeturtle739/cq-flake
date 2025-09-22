@@ -11,7 +11,7 @@
       flake = false;
     };
     ocp-src = {
-      url = "github:cadquery/ocp/7.8.1.2";
+      url = "github:cadquery/ocp";
       flake = false;
     };
     ocp-stubs-src = {
@@ -32,6 +32,17 @@
     let
       systems = [ "aarch64-linux" "x86_64-linux" ];
       overlay = final: prev: {
+        opencascade-occt = prev.opencascade-occt.overrideAttrs (oldAttrs: rec {
+          version = "7.9.0";
+          commit = "V${builtins.replaceStrings [ "." ] [ "_" ] version}";
+          src = final.fetchurl {
+            name = "occt-${commit}.tar.gz";
+            url =
+              "https://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=${commit};sf=tgz";
+            hash = "sha256-wZJKLDn0FH89HpILSm2eE5L5waNY3XzaopHemppmzWI=";
+          };
+          patches = [ ];
+        });
         lib3mf = final.callPackage ./expressions/lib3mf { };
         pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
           (import expressions/py-overrides.nix {
