@@ -1,11 +1,21 @@
-{ llvmPackages, pywrap-src, ocp-src, ocp-stubs-src, cadquery-src, occt
-, fetchFromGitHub, casadi, pybind11-stubgen-src, lib3mf }:
+{ llvmPackages, ocp-src, pywrap-src, cadquery-src, occt, fetchFromGitHub, casadi, lib3mf }:
 self: super: rec {
 
   pywrap = self.callPackage ./pywrap {
     inherit llvmPackages;
+    # src = "${ocp-src}/pywrap";
     src = pywrap-src;
   };
+
+  pybind11 = super.pybind11.overrideAttrs (oldAttrs: rec {
+    version = "3.0.1";
+    src = fetchFromGitHub {
+      owner = "pybind";
+      repo = "pybind11";
+      tag = "v${version}";
+      hash = "sha256-ZiwNGsE1FOkhnWv/1ib1akhQ4FZvrXRCDnnBZoPp6r4=";
+    };
+  });
 
   ocp = self.callPackage ./OCP {
     # llvmPackages = llvmPackages;
@@ -13,14 +23,9 @@ self: super: rec {
     opencascade-occt = occt;
   };
 
-  ocp-stubs = self.callPackage ./OCP/stubs.nix { src = ocp-stubs-src; };
-
   cadquery = self.callPackage ./cadquery.nix { src = cadquery-src; };
 
   cq-studio = self.callPackage ./cq-studio.nix { };
-
-  pybind11-stubgen =
-    self.callPackage ./OCP/pybind11-stubgen.nix { src = pybind11-stubgen-src; };
 
   cq-kit = self.callPackage ./cq-kit { };
 

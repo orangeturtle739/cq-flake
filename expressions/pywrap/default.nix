@@ -5,8 +5,7 @@
 let libclang_new = libclang.override { inherit llvmPackages; };
 
 in buildPythonPackage rec {
-  version = "git-" + builtins.substring 0 7 src.rev;
-  pname = "pywrap";
+  name = "pywrap";
   inherit src;
 
   pyproject = true;
