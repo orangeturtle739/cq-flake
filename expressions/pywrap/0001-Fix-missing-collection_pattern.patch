@@ -1,0 +1,45 @@
+From 9edd498922dc2dd397900c5698b110065ba758ee Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Wed, 4 Mar 2026 21:09:43 -0800
+Subject: [PATCH] Fix missing collection_pattern
+
+---
+ bindgen/__init__.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/bindgen/__init__.py b/bindgen/__init__.py
+index 4d72005..84898f7 100644
+--- a/bindgen/__init__.py
++++ b/bindgen/__init__.py
+@@ -472,7 +472,7 @@ def transform_modules(
+     logzero.logger.info("Collecting used collection template specializations")
+ 
+     collections_tmp: set[CollectionTypedef] = set()
+-    collection_pat = settings["collection_pattern"]
++    collection_pat = 'NCollection'
+     existing_typedefs: list[str] = []
+ 
+     # set the collection pattern in the parser
+@@ -634,7 +634,7 @@ def render(
+             "settings": settings,
+             "collection_types": collection_types,
+             "exclude_collections": exclude_collections,
+-            "collection_pat": settings["collection_pattern"],
++            "collection_pat": "NCollection",
+         }
+     )
+ 
+@@ -649,8 +649,8 @@ def render(
+     template_cmake = jinja_env.get_template("CMakeLists.j2")
+ 
+     # toposort collections - for now regarding the H* - * correspondence
+-    coll_pat = settings["collection_pattern"]
+-    colls_super = {el.name: el.superclasses for m in modules for el in m.class_templates if el.name.startswith(coll_pat)} 
++    coll_pat = 'NCollection'
++    colls_super = {el.name: el.superclasses for m in modules for el in m.class_templates if el.name.startswith(coll_pat)}
+     coll_names = {c.name(): c for c in collections}
+ 
+     # add missing parents
+-- 
+2.51.2
+

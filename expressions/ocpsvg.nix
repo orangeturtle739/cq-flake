@@ -2,13 +2,13 @@
 # Buildtime dependencies
 git, pytestCheckHook, setuptools-scm,
 # Runtime dependencies
-ocp, svgpathtools, svgelements, }:
+ocp, svgpathtools, svgelements, lib }:
 let
   pname = "ocpsvg";
-  version = "0.5.0";
+  version = "0.6.0";
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-XNjb7Iv1kNNzqCquvqskGDgYWqsE7ihZ8zudeVa7+6Y=";
+    hash = "sha256-8I2kNHzJDs01ZTlem9pXRtRquKr9aiaBuwOpwyG1QDk=";
   };
 in buildPythonPackage {
   inherit src pname version;

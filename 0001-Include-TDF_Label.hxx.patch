@@ -1,0 +1,26 @@
+From dbc3b7751f9631f0dedc73855f70b10e6d5b6268 Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Thu, 5 Mar 2026 22:08:39 -0800
+Subject: [PATCH] Include TDF_Label.hxx
+
+---
+ src/DataExchange/TKXCAF/XCAFDoc/XCAFDoc_AssemblyIterator.hxx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/DataExchange/TKXCAF/XCAFDoc/XCAFDoc_AssemblyIterator.hxx b/src/DataExchange/TKXCAF/XCAFDoc/XCAFDoc_AssemblyIterator.hxx
+index f66af1bc3c..c410404b24 100644
+--- a/src/DataExchange/TKXCAF/XCAFDoc/XCAFDoc_AssemblyIterator.hxx
++++ b/src/DataExchange/TKXCAF/XCAFDoc/XCAFDoc_AssemblyIterator.hxx
+@@ -17,8 +17,8 @@
+ 
+ #include <NCollection_Sequence.hxx>
+ #include <XCAFDoc_AssemblyItemId.hxx>
++#include <TDF_Label.hxx>
+ 
+-class TDF_Label;
+ class TDocStd_Document;
+ class XCAFDoc_ShapeTool;
+ 
+-- 
+2.51.2
+

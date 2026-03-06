@@ -1,11 +1,11 @@
 { lib, stdenv, src, buildPythonPackage, setuptools, pythonOlder, cmake, ninja
-, glibc, opencascade-occt, pybind11, libglvnd, xorg, python, writeTextFile
-, pywrap, vtk, rapidjson, lief, path }:
+, glibc, opencascade-occt, pybind11, fmt, libglvnd, libx11, xorgproto, python
+, writeTextFile, pywrap, vtk, rapidjson, lief, path }:
 let
   # We need to use an unmodified version number for the dist-utils version so
   # that the version check in cadquery works
   # remember to change version number in dump_symbols.py as well
-  base-version = "7.8.1.2";
+  base-version = "8.0.0-rc3";
   version = "v${base-version}-git-${src.shortRev}";
 
   vtk_main_version = lib.versions.majorMinor vtk.version;
@@ -64,8 +64,8 @@ let
     in builtins.concatStringsSep " " (map (p: "-i " + p) [
       "${rapidjson}/include"
       "${vtk}/include/vtk/"
-      "${xorg.xorgproto}/include"
-      "${xorg.libX11.dev}/include"
+      "${xorgproto}/include"
+      "${libx11.dev}/include"
       "${libglvnd.dev}/include"
       "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}"
       "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}/${compiler}"
@@ -97,9 +97,9 @@ let
 
     # do not put glibc.dev in here https://discourse.nixos.org/t/how-to-get-this-basic-c-build-to-work-in-a-nix-shell/12262/3
     # https://github.com/NixOS/nixpkgs/pull/28748
-    nativeBuildInputs = [ cmake ninja pywrap pybind11 python rapidjson ];
+    nativeBuildInputs = [ cmake ninja pywrap pybind11 fmt python rapidjson ];
 
-    buildInputs = [ libglvnd.dev xorg.libX11.dev xorg.xorgproto vtk ]
+    buildInputs = [ libglvnd.dev libx11.dev xorgproto vtk ]
       ++ opencascade-occt.buildInputs ++ vtk.buildInputs;
 
     preConfigure = ''

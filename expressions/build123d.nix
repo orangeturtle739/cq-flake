@@ -3,16 +3,16 @@
 git, pytestCheckHook, setuptools-scm,
 # Runtime dependencies
 anytree, ezdxf, ipython, numpy, ocp, ocpsvg, lib3mf, py-lib3mf, scipy
-, svgpathtools, sympy, trianglesolver, vtk, }:
+, svgpathtools, sympy, trianglesolver, vtk, lib }:
 let
   pname = "build123d";
-  version = "0.9.2";
+  version = "0.1.0-beta";
   src = fetchFromGitHub {
     owner = "gumyr";
     repo = pname;
-    rev = "67115111e2139540fff5560fceaf7ade9a1c3ac8";
+    rev = "cb155f79d18f8247eb8e951617d0a3056be0ceec";
     deepClone = true;
-    hash = "sha256-bnygtEHgn7sgBU+By1kALMowrTxMl72Vt6aZDSs7cGI=";
+    hash = "sha256-IoWAtFGO9ie550ugpUsUDjuwxXOEk/o6RhTn3XAaQdU=";
   };
 in buildPythonPackage {
   inherit src pname version;

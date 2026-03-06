@@ -5,17 +5,17 @@ poetry-core,
 build123d, pygltflib, pillow, lib }:
 let
   pname = "yacv-server";
-  version = "0.9.5";
+  version = "0.10.11";
   src = fetchFromGitHub {
     owner = "yeicor-3d";
     repo = "yet-another-cad-viewer";
     rev = "v${version}";
-    hash = "sha256-sdzDsyHanZlnmoQutbUvYoEN+FIQZU7pYn9FMO17t9E=";
+    hash = "sha256-u9StuQqfyf3NCSbdh4obDcLJbjS9wfCNNpfd8nuaK/E=";
   };
   frontend = fetchzip {
     url =
       "https://github.com/yeicor-3d/yet-another-cad-viewer/releases/download/v${version}/frontend.zip";
-    hash = "sha256-o4dVmCDtmUxrH/KoQdZ0vUOtnCaTHKy7SzKIdHeAMGU=";
+    hash = "sha256-yogt3MQ2lNR5bG1USF9teRbH+Zn7Hyq7ptTtTtBHKWI=";
   };
 in buildPythonPackage {
   inherit src pname version;

@@ -31,6 +31,8 @@ in buildPythonPackage rec {
 
   dontUseCmakeConfigure = true;
 
+  # patches = [ ./0001-Fix-missing-collection_pattern.patch ];
+
   # do I need this at all?
   postPatch = ''
     substituteInPlace bindgen/CMakeLists.j2 --replace '$ENV{CONDA_PREFIX}/bin/python' ${python}

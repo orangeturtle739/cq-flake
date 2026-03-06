@@ -1,0 +1,207 @@
+From 5a9735b5037cea023f7e9ce9108d763958f350e6 Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Tue, 3 Mar 2026 19:44:22 -0800
+Subject: [PATCH] Migrate to OCCT V8
+
+---
+ IO/OCCT/vtkOCCTReader.cxx | 57 ++++++++++++++++++++++-----------------
+ 1 file changed, 32 insertions(+), 25 deletions(-)
+
+diff --git a/IO/OCCT/vtkOCCTReader.cxx b/IO/OCCT/vtkOCCTReader.cxx
+index 5aca5c93c8..a7323366c9 100644
+--- a/IO/OCCT/vtkOCCTReader.cxx
++++ b/IO/OCCT/vtkOCCTReader.cxx
+@@ -26,8 +26,15 @@
+ #include <Poly_Triangulation.hxx>
+ #include <Quantity_Color.hxx>
+ #include <STEPCAFControl_Reader.hxx>
+-#include <Standard_PrimitiveTypes.hxx>
+-#include <TColgp_Array1OfVec.hxx>
++#include <stddef.h>
++#include <stdlib.h>
++#include <Standard_Macro.hxx>
++#include <Standard_Boolean.hxx>
++#include <Standard_Integer.hxx>
++#include <Standard_Real.hxx>
++#include <Standard_Character.hxx>
++#include <Standard_ExtCharacter.hxx>
++#include <Standard_CString.hxx>
+ #include <TDF_ChildIterator.hxx>
+ #include <TDataStd_Name.hxx>
+ #include <TDocStd_Document.hxx>
+@@ -92,7 +99,7 @@ public:
+     vtkNew<vtkCellArray> trianglesCells;
+     vtkNew<vtkCellArray> linesCells;
+ 
+-    Standard_Integer shift = 0;
++    int shift = 0;
+ 
+     if (this->Parent->GetReadWire())
+     {
+@@ -109,7 +116,7 @@ public:
+           // meshing
+           BRepMesh_IncrementalMesh(edge, this->Parent->GetLinearDeflection(),
+             this->Parent->GetRelativeDeflection(), this->Parent->GetAngularDeflection(),
+-            Standard_True);
++            true);
+         }
+ 
+         if (poly.IsNull())
+@@ -117,11 +124,11 @@ public:
+           continue;
+         }
+ 
+-        Standard_Integer nbV = poly->NbNodes();
++        int nbV = poly->NbNodes();
+ 
+         // Points
+-        const TColgp_Array1OfPnt& aNodes = poly->Nodes();
+-        for (Standard_Integer i = 1; i <= nbV; i++)
++        const NCollection_Array1<gp_Pnt>& aNodes = poly->Nodes();
++        for (int i = 1; i <= nbV; i++)
+         {
+           gp_Pnt pt = aNodes(i).Transformed(location);
+           points->InsertNextPoint(pt.X(), pt.Y(), pt.Z());
+@@ -163,7 +170,7 @@ public:
+         // meshing
+         BRepMesh_IncrementalMesh(face, this->Parent->GetLinearDeflection(),
+           this->Parent->GetRelativeDeflection(), this->Parent->GetAngularDeflection(),
+-          Standard_True);
++          true);
+       }
+ 
+       if (poly.IsNull())
+@@ -174,11 +181,11 @@ public:
+       Poly::ComputeNormals(poly);
+       TopAbs_Orientation faceOrientation = face.Orientation();
+ 
+-      Standard_Integer nbT = poly->NbTriangles();
+-      Standard_Integer nbV = poly->NbNodes();
++      int nbT = poly->NbTriangles();
++      int nbV = poly->NbNodes();
+ 
+       // Points
+-      for (Standard_Integer i = 1; i <= nbV; i++)
++      for (int i = 1; i <= nbV; i++)
+       {
+         gp_Pnt pt = poly->Node(i).Transformed(location);
+         points->InsertNextPoint(pt.X(), pt.Y(), pt.Z());
+@@ -187,7 +194,7 @@ public:
+       // Normals
+       if (poly->HasNormals())
+       {
+-        for (Standard_Integer i = 1; i <= nbV; i++)
++        for (int i = 1; i <= nbV; i++)
+         {
+           gp_Dir n = poly->Normal(i);
+           float fn[3] = { static_cast<float>(n.X()), static_cast<float>(n.Y()),
+@@ -203,7 +210,7 @@ public:
+       {
+         // just in case a face does not have normals, add a dummy normal
+         float fn[3] = { 0.0, 0.0, 1.0 };
+-        for (Standard_Integer i = 1; i <= nbV; i++)
++        for (int i = 1; i <= nbV; i++)
+         {
+           normals->InsertNextTypedTuple(fn);
+         }
+@@ -212,7 +219,7 @@ public:
+       // UVs
+       if (poly->HasUVNodes())
+       {
+-        for (Standard_Integer i = 1; i <= nbV; i++)
++        for (int i = 1; i <= nbV; i++)
+         {
+           gp_Pnt2d uv = poly->UVNode(i);
+           float fn[2] = { static_cast<float>(uv.X()), static_cast<float>(uv.Y()) };
+@@ -222,7 +229,7 @@ public:
+       else
+       {
+         float fn[3] = { 0.0, 0.0 };
+-        for (Standard_Integer i = 1; i <= nbV; i++)
++        for (int i = 1; i <= nbV; i++)
+         {
+           uvs->InsertNextTypedTuple(fn);
+         }
+@@ -325,7 +332,7 @@ public:
+   //----------------------------------------------------------------------------
+   static std::string GetName(const TDF_Label& label)
+   {
+-    Handle(TDataStd_Name) name;
++    occ::handle<TDataStd_Name> name;
+     std::string part_name = "Unnamed";
+     if (label.FindAttribute(TDataStd_Name::GetID(), name))
+     {
+@@ -383,7 +390,7 @@ public:
+   //----------------------------------------------------------------------------
+   static void GetLocation(const TDF_Label& label, vtkMatrix4x4* location)
+   {
+-    Handle(XCAFDoc_Location) hLoc;
++    occ::handle<XCAFDoc_Location> hLoc;
+     if (label.FindAttribute(XCAFDoc_Location::GetID(), hLoc))
+     {
+       GetMatrix(hLoc->Get(), location);
+@@ -394,8 +401,8 @@ public:
+ #else
+   std::unordered_map<int, vtkSmartPointer<vtkPolyData>> ShapeMap;
+ #endif
+-  Handle(XCAFDoc_ShapeTool) ShapeTool;
+-  Handle(XCAFDoc_ColorTool) ColorTool;
++  occ::handle<XCAFDoc_ShapeTool> ShapeTool;
++  occ::handle<XCAFDoc_ColorTool> ColorTool;
+ 
+   vtkOCCTReader* Parent;
+ };
+@@ -424,7 +431,7 @@ public:
+   ProgressIndicator(vtkOCCTReader* reader) { this->Reader = reader; }
+ 
+ protected:
+-  void Show(const Message_ProgressScope&, const Standard_Boolean) override
++  void Show(const Message_ProgressScope&, const bool) override
+   {
+     double currentPosition = this->GetPosition();
+     if (currentPosition - this->LastPosition > 0.01)
+@@ -443,7 +450,7 @@ private:
+ 
+ //----------------------------------------------------------------------------
+ template <typename T>
+-bool TransferToDocument(vtkOCCTReader* that, T& reader, Handle(TDocStd_Document) doc)
++bool TransferToDocument(vtkOCCTReader* that, T& reader, occ::handle<TDocStd_Document> doc)
+ {
+   reader.SetColorMode(true);
+   reader.SetNameMode(true);
+@@ -473,7 +480,7 @@ int vtkOCCTReader::RequestData(
+ 
+   Message::DefaultMessenger()->RemovePrinters(STANDARD_TYPE(Message_PrinterOStream));
+ 
+-  Handle(TDocStd_Document) doc;
++  occ::handle<TDocStd_Document> doc;
+   XCAFApp_Application::GetApplication()->NewDocument("MDTV-XCAF", doc);
+   if (this->FileFormat == Format::STEP)
+   {
+@@ -489,12 +496,12 @@ int vtkOCCTReader::RequestData(
+   this->Internals->ShapeTool = XCAFDoc_DocumentTool::ShapeTool(doc->Main());
+   this->Internals->ColorTool = XCAFDoc_DocumentTool::ColorTool(doc->Main());
+ 
+-  TDF_LabelSequence topLevelShapes;
++  NCollection_Sequence<TDF_Label> topLevelShapes;
+ 
+   // create polydata leaves
+   this->Internals->ShapeTool->GetShapes(topLevelShapes);
+ 
+-  for (Standard_Integer iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
++  for (int iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
+   {
+     TDF_Label label = topLevelShapes.Value(iLabel);
+ 
+@@ -513,7 +520,7 @@ int vtkOCCTReader::RequestData(
+ 
+   vtkNew<vtkMatrix4x4> mat;
+   mat->Identity();
+-  for (Standard_Integer iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
++  for (int iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
+   {
+     this->Internals->AddLabel(topLevelShapes.Value(iLabel), mat, output);
+   }
+-- 
+2.51.2
+
