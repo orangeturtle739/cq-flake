@@ -23,6 +23,8 @@ in buildPythonPackage {
 
   SKIP_BUILD_FRONTEND = "1";
 
+  patches = [ ./0001-do-not-restrict-versions.patch ];
+
   build-system = [ poetry-core ];
 
   dependencies = [ build123d pygltflib pillow ];

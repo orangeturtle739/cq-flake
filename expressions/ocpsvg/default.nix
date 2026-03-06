@@ -14,10 +14,7 @@ in buildPythonPackage {
   inherit src pname version;
   pyproject = true;
 
-  patchPhase = ''
-    substituteInPlace pyproject.toml \
-      --replace "cadquery-ocp" "ocp"
-  '';
+  patches = [ ./0001-do-not-restrict-ocp-version.patch ];
 
   build-system = [ setuptools-scm git ];
 

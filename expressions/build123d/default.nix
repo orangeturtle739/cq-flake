@@ -3,25 +3,22 @@
 git, pytestCheckHook, setuptools-scm,
 # Runtime dependencies
 anytree, ezdxf, ipython, numpy, ocp, ocpsvg, lib3mf, py-lib3mf, scipy
-, svgpathtools, sympy, trianglesolver, vtk, lib }:
+, svgpathtools, sympy, trianglesolver, vtk, webcolors, ocp-gordon, lib }:
 let
   pname = "build123d";
-  version = "0.1.0-beta";
+  version = "0.10.0-beta";
   src = fetchFromGitHub {
     owner = "gumyr";
     repo = pname;
-    rev = "cb155f79d18f8247eb8e951617d0a3056be0ceec";
+    rev = "934ebe661235f3ab17c3a64b1b542171cc8dcc70";
     deepClone = true;
-    hash = "sha256-IoWAtFGO9ie550ugpUsUDjuwxXOEk/o6RhTn3XAaQdU=";
+    hash = "sha256-lf1oMODRmvZHv+pYrxrdwt6luYSndqABRXkqnj3hu2g=";
   };
 in buildPythonPackage {
   inherit src pname version;
   format = "pyproject";
 
-  patchPhase = ''
-    substituteInPlace pyproject.toml \
-      --replace "cadquery-ocp" "ocp"
-  '';
+  patches = [ ./0001-do-not-restrict-ocp-version.patch ];
 
   nativeBuildInputs = [ git pytestCheckHook setuptools-scm ];
 
@@ -38,6 +35,8 @@ in buildPythonPackage {
     sympy
     trianglesolver
     vtk
+    webcolors
+    ocp-gordon
   ];
 
   disabledTests = [

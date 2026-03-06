@@ -25,7 +25,7 @@ self: super: rec {
     */
   };
 
-  cadquery = self.callPackage ./cadquery.nix { src = cadquery-src; };
+  cadquery = self.callPackage ./cadquery { src = cadquery-src; };
 
   cq-studio = self.callPackage ./cq-studio.nix { };
 
@@ -33,13 +33,14 @@ self: super: rec {
 
   cq-warehouse = self.callPackage ./cq-warehouse.nix { };
 
-  ocpsvg = self.callPackage ./ocpsvg.nix { };
+  ocpsvg = self.callPackage ./ocpsvg { };
 
   py-lib3mf = self.callPackage ./py-lib3mf { };
 
   trianglesolver = self.callPackage ./trianglesolver.nix { };
 
-  build123d = self.callPackage ./build123d.nix { };
+  build123d = self.callPackage ./build123d { };
+  ocp-gordon = self.callPackage ./ocp-gordon { };
 
   yacv-server = self.callPackage ./yacv/server.nix { };
 }

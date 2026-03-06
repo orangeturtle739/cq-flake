@@ -1,0 +1,35 @@
+From 4b33d02d7f37234e73bba29a1182c20cae5e6672 Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Fri, 6 Mar 2026 06:21:43 -0800
+Subject: [PATCH] do not restrict ocp version
+
+---
+ setup.py | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 28b6288..f89124c 100644
+--- a/setup.py
++++ b/setup.py
+@@ -26,16 +26,10 @@ is_conda = "CONDA_PREFIX" in os.environ
+ # Only include the installation dependencies if we are not running on RTD or AppVeyor or in a conda env
+ if not is_rtd and not is_appveyor and not is_azure and not is_conda:
+     reqs = [
+-        "cadquery-ocp>=7.9.3.1,<8.0",
++        "ocp",
+         "ezdxf>=1.3.0",
+-        "multimethod>=1.11,<2.0",
++        "multimethod",
+         "nlopt>=2.9.0,<3.0",
+-        "runtype",
+-        "casadi",
+-        "trame",
+-        "trame-vtk",
+-        "trame-components",
+-        "trame-vuetify",
+         "pyparsing>=3.0.0",
+     ]
+ 
+-- 
+2.51.2
+

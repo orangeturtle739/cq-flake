@@ -1,6 +1,6 @@
 { lib, buildPythonPackage, setuptools, setuptools-scm, isPy3k, pythonOlder
 , fetchFromGitHub, makeFontsConf, freefont_ttf, pytestCheckHook, pytest-xdist
-, ocp, casadi, ezdxf, ipython, src, nptyping, typish, vtk, nlopt, multimethod
+, ocp, casadi, pythonPackages, ezdxf, ipython, src, nptyping, typish, vtk, nlopt, multimethod
 , docutils, path }:
 
 buildPythonPackage rec {
@@ -13,15 +13,11 @@ buildPythonPackage rec {
 
   pyproject = true;
   build-system = [ setuptools ];
+  patches = [ ./0001-do-not-restrict-ocp-version.patch ];
 
   SETUPTOOLS_SCM_PRETEND_VERSION = "${version}";
 
   nativeBuildInputs = [ setuptools-scm ];
-
-  patchPhase = ''
-    substituteInPlace setup.py \
-      --replace "cadquery-ocp" "ocp"
-  '';
 
   propagatedBuildInputs =
     [ ocp ezdxf casadi ipython nptyping typish vtk nlopt multimethod ];
