@@ -12,16 +12,15 @@ self: super: rec {
     # llvmPackages = llvmPackages;
     src = ocp-src;
     opencascade-occt = occt;
-    /*
-    pybind11 = super.pybind11.overrideAttrs (oldAttrs: rec {
-      version = "3.0.1-beta";
-      src = fetchFromGitHub {
-        owner = "pybind";
-        repo = "pybind11";
-        rev = "3ae5a173c54ab64339ad4a6c57557896b8bad6f9";
-        hash = "sha256-ANzdW4ffT//3OeaYBOXQt04Ib6B4doN+BmWgtWXTZ1s=";
-      };
-    });
+    /* pybind11 = super.pybind11.overrideAttrs (oldAttrs: rec {
+         version = "3.0.1-beta";
+         src = fetchFromGitHub {
+           owner = "pybind";
+           repo = "pybind11";
+           rev = "3ae5a173c54ab64339ad4a6c57557896b8bad6f9";
+           hash = "sha256-ANzdW4ffT//3OeaYBOXQt04Ib6B4doN+BmWgtWXTZ1s=";
+         };
+       });
     */
   };
 

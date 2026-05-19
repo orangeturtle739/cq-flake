@@ -1,7 +1,7 @@
 { lib, buildPythonPackage, setuptools, setuptools-scm, isPy3k, pythonOlder
 , fetchFromGitHub, makeFontsConf, freefont_ttf, pytestCheckHook, pytest-xdist
-, ocp, casadi, pythonPackages, ezdxf, ipython, src, nptyping, typish, vtk, nlopt, multimethod
-, docutils, path }:
+, ocp, casadi, pythonPackages, ezdxf, ipython, src, nptyping, typish, vtk, nlopt
+, multimethod, docutils, path }:
 
 buildPythonPackage rec {
   pname = "cadquery";

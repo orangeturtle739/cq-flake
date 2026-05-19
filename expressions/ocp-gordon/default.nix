@@ -21,9 +21,5 @@ in buildPythonPackage {
 
   nativeBuildInputs = [ git pytestCheckHook setuptools-scm ];
 
-  propagatedBuildInputs = [
-    numpy
-    scipy
-    ocp
-  ];
+  propagatedBuildInputs = [ numpy scipy ocp ];
 }

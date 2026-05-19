@@ -27,11 +27,10 @@
         "git+https://github.com/Open-Cascade-SAS/OCCT.git?rev=a509566a2833b2be0a1ea550905908d2df4f8b21";
       flake = false;
     };
-    /*
-    vtk-src = {
-      url = "git+https://gitlab.kitware.com/vtk/vtk.git?rev=";
-      flake = false;
-      };
+    /* vtk-src = {
+       url = "git+https://gitlab.kitware.com/vtk/vtk.git?rev=";
+       flake = false;
+       };
     */
   };
 
@@ -83,7 +82,7 @@
             cadquery cq-kit cq-warehouse build123d cq-studio;
           inherit (pkgs) python3;
           python = pkgs.python3;
-          lol = pkgs.python3.withPackages (ps: [ps.cadquery]);
+          lol = pkgs.python3.withPackages (ps: [ ps.cadquery ]);
           default = packages.cq-studio;
         };
 
