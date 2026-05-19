@@ -83,6 +83,7 @@
             cadquery cq-kit cq-warehouse build123d cq-studio;
           inherit (pkgs) python3;
           python = pkgs.python3;
+          lol = pkgs.python3.withPackages (ps: [ps.cadquery]);
           default = packages.cq-studio;
         };
 
