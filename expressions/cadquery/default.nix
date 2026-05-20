@@ -29,7 +29,7 @@ buildPythonPackage rec {
 
   checkInputs = [ pytestCheckHook pytest-xdist docutils path ];
 
-  pytestFlagsArray = [
+  pytestFlags = [
     "-W ignore::FutureWarning"
     "-n $NIX_BUILD_CORES"
     "-k 'not example'"

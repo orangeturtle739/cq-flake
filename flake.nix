@@ -12,19 +12,7 @@
     };
     ocp-src = {
       url =
-        "git+https://github.com/cadquery/ocp?submodules=1&rev=939afdaee92f31008e5380ecaef929458d86963d";
-      flake = false;
-    };
-    pywrap-src = {
-      # https://github.com/CadQuery/pywrap/commits/arg-fix/
-      url =
-        "git+https://github.com/CadQuery/pywrap?rev=77e20408ceb31a77c9b7e45961b1e2873df150a1";
-      flake = false;
-    };
-    occt-src = {
-      # https://github.com/CadQuery/OCP/blob/939afdaee92f31008e5380ecaef929458d86963d/opencascade/Standard_Version.hxx#L48
-      url =
-        "git+https://github.com/Open-Cascade-SAS/OCCT.git?rev=a509566a2833b2be0a1ea550905908d2df4f8b21";
+        "git+https://github.com/cadquery/ocp?submodules=1&rev=d69b064a3a604ebf245b1f3b14fb54c835a3a571";
       flake = false;
     };
     /* vtk-src = {
@@ -38,18 +26,20 @@
     let
       systems = [ "aarch64-linux" "x86_64-linux" ];
       overlay = final: prev: {
-        opencascade-occt = prev.opencascade-occt.overrideAttrs (oldAttrs: rec {
-          version = "8.0.0-rc3";
-          commit =
-            "V${builtins.replaceStrings [ "." "-" ] [ "_" "_" ] version}";
-          src = inputs.occt-src;
-          buildInputs = oldAttrs.buildInputs ++ [ final.expat ];
-          patches = [ ./0001-Include-TDF_Label.hxx.patch ];
-        });
-        vtk_9_5 = prev.vtk_9_5.overrideAttrs (oldAttrs: rec {
-          # src = inputs.vtk-src;
-          patches = oldAttrs.patches ++ [ ./0001-Migrate-to-OCCT-V8.patch ];
-        });
+        /* opencascade-occt = prev.opencascade-occt.overrideAttrs (oldAttrs: rec {
+           version = "7.9.3";
+           commit =
+             "V${builtins.replaceStrings [ "." "-" ] [ "_" "_" ] version}";
+           src = inputs.occt-src;
+           buildInputs = oldAttrs.buildInputs ++ [ final.expat ];
+           patches = [ ./0001-Include-TDF_Label.hxx.patch ];
+           });
+        */
+        /* vtk_9_5 = prev.vtk_9_5.overrideAttrs (oldAttrs: rec {
+           # src = inputs.vtk-src;
+           patches = oldAttrs.patches ++ [ ./0001-Migrate-to-OCCT-V8.patch ];
+           });
+        */
         # lib3mf = final.callPackage ./expressions/lib3mf { };
         pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
           (import expressions/py-overrides.nix {
@@ -57,7 +47,6 @@
             pywrap-src = "${inputs.ocp-src}/pywrap";
             inherit (final) fetchFromGitHub;
             llvmPackages = final.llvmPackages_21;
-            occt = final.opencascade-occt;
             casadi = prev.casadi.override { pythonSupport = true; };
           })
         ];

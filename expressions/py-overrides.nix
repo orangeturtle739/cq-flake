@@ -1,27 +1,19 @@
-{ llvmPackages, ocp-src, pywrap-src, cadquery-src, occt, fetchFromGitHub, casadi
+{ llvmPackages, ocp-src, pywrap-src, cadquery-src, fetchFromGitHub, casadi
 }:
 self: super: rec {
+  pybind11' = self.callPackage ./pybind11-2.13.6 { };
 
   pywrap = self.callPackage ./pywrap {
     inherit llvmPackages;
     # src = "${ocp-src}/pywrap";
     src = pywrap-src;
+    # pybind11 = pybind11';
   };
 
   ocp = self.callPackage ./OCP {
-    # llvmPackages = llvmPackages;
+    llvmPackages = llvmPackages;
     src = ocp-src;
-    opencascade-occt = occt;
-    /* pybind11 = super.pybind11.overrideAttrs (oldAttrs: rec {
-         version = "3.0.1-beta";
-         src = fetchFromGitHub {
-           owner = "pybind";
-           repo = "pybind11";
-           rev = "3ae5a173c54ab64339ad4a6c57557896b8bad6f9";
-           hash = "sha256-ANzdW4ffT//3OeaYBOXQt04Ib6B4doN+BmWgtWXTZ1s=";
-         };
-       });
-    */
+    # pybind11 = pybind11';
   };
 
   cadquery = self.callPackage ./cadquery { src = cadquery-src; };

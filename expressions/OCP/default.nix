@@ -1,11 +1,11 @@
 { lib, stdenv, src, buildPythonPackage, setuptools, pythonOlder, cmake, ninja
 , glibc, opencascade-occt, pybind11, fmt, libglvnd, libx11, xorgproto, python
-, writeTextFile, pywrap, vtk, rapidjson, lief, path }:
+, writeTextFile, pywrap, vtk, rapidjson, lief, path, llvmPackages }:
 let
   # We need to use an unmodified version number for the dist-utils version so
   # that the version check in cadquery works
   # remember to change version number in dump_symbols.py as well
-  base-version = "8.0.0-rc3";
+  base-version = "7.9.3.1";
   version = "v${base-version}-git-${src.shortRev}";
 
   vtk_main_version = lib.versions.majorMinor vtk.version;
@@ -33,53 +33,84 @@ let
 
   };
 
+  python-with-pywrap-packages = python.withPackages (ps: with ps; [
+        pybind11
+        joblib
+        toml
+        click
+        jinja2
+        logzero
+        pandas
+        path
+        pyparsing
+        schema
+        tqdm
+        toposort
+        lief
+        (libclang.override { inherit llvmPackages; })
+  ]);
+
   # intermediate step, do pybind, cmake in the next step
   ocp-pybound = stdenv.mkDerivation rec {
     pname = "pybound-ocp";
     inherit version src;
 
-    phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
+    patches = [./0001-Allow-multiple-opengl-include-directories.patch];
 
-    nativeBuildInputs = [ pywrap rapidjson ocp-dump-symbols ];
+    # phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
 
-    postPatch = ''
-      cp ${ocp-dump-symbols}/symbols_mangled_linux.dat ./
-    '';
+    nativeBuildInputs = [ cmake ninja pybind11 fmt rapidjson llvmPackages.libclang.dev python-with-pywrap-packages ];
+
+    buildInputs = [ libglvnd.dev libx11.dev xorgproto vtk llvmPackages.llvm ]
+      ++ opencascade-occt.buildInputs ++ vtk.buildInputs;
+
+    # postPatch = ''
+    #   cp ${ocp-dump-symbols}/symbols_mangled_linux.dat ./
+    # '';
 
     # should this actually be in pywrap?
     preBuild = ''
       export PYBIND11_USE_CMAKE=1
     '';
 
+    dontUseCmakeBuildDir = "true";
+    cmakeFlags = [
+      "-S ."
+      "-B ."
+      "-DPython_EXECUTABLE=${python-with-pywrap-packages}/bin/python"
+      "-DOpenCASCADE_INCLUDE_DIR=${src}/opencascade"
+      "-DVTK_DIR=${vtk}/lib/cmake/vtk/"
+    ];
+
     # the order of the following includes is critical, but makes utterly zero sense to me. Order discovered by trial and error and hulk smashing the keyboard.
-    pywrapFlags = let
-      system = stdenv.hostPlatform.system;
-      compiler = if system == "x86_64-linux" then
-        "x86_64-unknown-linux-gnu"
-      else if system == "aarch64-linux" then
-        "aarch64-unknown-linux-gnu"
-      else
-        (throw "unsupported system ${system}");
+    # pywrapFlags = let
+    #   system = stdenv.hostPlatform.system;
+    #   compiler = if system == "x86_64-linux" then
+    #     "x86_64-unknown-linux-gnu"
+    #   else if system == "aarch64-linux" then
+    #     "aarch64-unknown-linux-gnu"
+    #   else
+    #     (throw "unsupported system ${system}");
 
-    in builtins.concatStringsSep " " (map (p: "-i " + p) [
-      "${rapidjson}/include"
-      "${vtk}/include/vtk/"
-      "${xorgproto}/include"
-      "${libx11.dev}/include"
-      "${libglvnd.dev}/include"
-      "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}"
-      "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}/${compiler}"
-      "${glibc.dev}/include"
-      # gcc-14-20241116 has its include files in lib/gcc/x86_64-unknown-linux-gnu/14.2.1/
-      "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include-fixed"
-      "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include"
-    ]);
+    # in builtins.concatStringsSep " " (map (p: "-i " + p) [
+    #   "${rapidjson}/include"
+    #   "${vtk}/include/vtk/"
+    #   "${xorgproto}/include"
+    #   "${libx11.dev}/include"
+    #   "${libglvnd.dev}/include"
+    #   "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}"
+    #   "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}/${compiler}"
+    #   "${glibc.dev}/include"
+    #   # gcc-14-20241116 has its include files in lib/gcc/x86_64-unknown-linux-gnu/14.2.1/
+    #   "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include-fixed"
+    #   "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include"
+    # ]);
 
-    buildPhase = ''
-      runHook preBuild
-      pywrap -n $NIX_BUILD_CORES ${pywrapFlags} all ocp.toml
-      runHook postBuild
-    '';
+    # buildPhase = ''
+    #   runHook preBuild
+    #   pywrap -n $NIX_BUILD_CORES ${pywrapFlags} all ocp.toml
+    #   runHook postBuild
+    # '';
 
     installPhase = ''
       mkdir -p $out

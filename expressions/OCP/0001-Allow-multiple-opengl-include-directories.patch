@@ -1,0 +1,46 @@
+From e3ea2bd462fc5999bfc83a52ca2d9d5e00af72a8 Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Tue, 19 May 2026 22:40:19 -0700
+Subject: [PATCH] Allow multiple opengl include directories
+
+---
+ CMakeLists.txt | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 12fef27a..849cc7cf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,6 @@
+ cmake_minimum_required( VERSION 3.29 )
+ project( OCP )
+ 
+-set( N_PROC 2 CACHE STRING "Number of processes used for generating code")
+ set( DLL_EXT dll CACHE STRING "DLL suffix")
+ set( MSVC_VER 16 CACHE STRING "MSVC version to download for win generation")
+ set( OCCT_LIB_DIR  CACHE PATH "Location of OCCT sos/dlls")
+@@ -112,18 +111,18 @@ add_custom_command(
+         ${CMAKE_COMMAND} -E env "PYTHONPATH=${CMAKE_SOURCE_DIR}/pywrap"
+         ${Python_EXECUTABLE}
+         -m bindgen
+-        -n ${N_PROC}
++        -n $ENV{NIX_BUILD_CORES}
+         -l ${LIBCLANG_PATH}
+         -i ${VTK_INCLUDE_DIR}/
+-        -i ${OPENGL_INCLUDE_DIRS}
++        "-i$<JOIN:${OPENGL_INCLUDE_DIRS},;-i>"
+         -i ${RapidJSON_INCLUDE_DIRS}
+-        -i ${CLANG_INSTALL_PREFIX}/lib/clang/${LLVM_VERSION_MAJOR}/include/
+         -p ${CMAKE_SOURCE_DIR}
+         ${CXX_INCLUDES}
+         all ${CMAKE_SOURCE_DIR}/ocp.toml ${PLATFORM}
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+     DEPENDS ${CMAKE_SOURCE_DIR}/ocp.toml
+     USES_TERMINAL
++    COMMAND_EXPAND_LISTS
+     COMMENT "Running pywrap"
+ )
+ 
+-- 
+2.51.2
+
