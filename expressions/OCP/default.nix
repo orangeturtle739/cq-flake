@@ -1,6 +1,6 @@
-{ lib, stdenv, src, buildPythonPackage, setuptools, pythonOlder, cmake, ninja
-, glibc, opencascade-occt, fmt, libglvnd, libx11, xorgproto, python
-, writeTextFile, pywrap, vtk, rapidjson, lief, path, llvmPackages, pybind11 }:
+{ lib, stdenv, src, ocp-stubs, buildPythonPackage, setuptools, pythonOlder, cmake, ninja
+, glibc, opencascade-occt-vtk, fmt, libglvnd, libx11, xorgproto, python
+, writeTextFile, pywrap, vtk-occt-vtk, rapidjson, lief, path, llvmPackages, pybind11 }:
 let
   # We need to use an unmodified version number for the dist-utils version so
   # that the version check in cadquery works
@@ -8,20 +8,20 @@ let
   base-version = "7.9.3.1";
   version = "v${base-version}-git-${src.shortRev}";
 
-  vtk_main_version = lib.versions.majorMinor vtk.version;
+  vtk_main_version = lib.versions.majorMinor vtk-occt-vtk.version;
 
   ocp-dump-symbols = stdenv.mkDerivation rec {
     pname = "ocp-dump-symbols";
     inherit version src;
 
-    nativeBuildInputs = [ lief path opencascade-occt ];
+    nativeBuildInputs = [ lief path opencascade-occt-vtk ];
 
     phases = [ "unpackPhase" "buildPhase" "installPhase" "installCheckPhase" ];
 
     dumpSymbols = ./dump_symbols.py;
 
     buildPhase = ''
-      python $dumpSymbols ${opencascade-occt}
+      python $dumpSymbols ${opencascade-occt-vtk}
     '';
 
     installPhase = ''
@@ -55,62 +55,11 @@ let
     pname = "pybound-ocp";
     inherit version src;
 
-    patches = [./0001-Allow-multiple-opengl-include-directories.patch ./0001-only-do-app-par-curves.patch ];
+    phases = [ "unpackPhase" "buildPhase" "installPhase" ];
 
-    # phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
-
-    nativeBuildInputs = [ cmake ninja pybind11 fmt rapidjson llvmPackages.libclang.dev python-with-pywrap-packages ];
-
-    buildInputs = [ libglvnd.dev libx11.dev xorgproto vtk llvmPackages.llvm ]
-      ++ opencascade-occt.buildInputs ++ vtk.buildInputs;
-
-    # postPatch = ''
-    #   cp ${ocp-dump-symbols}/symbols_mangled_linux.dat ./
-    # '';
-
-    # should this actually be in pywrap?
-    preBuild = ''
-      export PYBIND11_USE_CMAKE=1
+    buildPhase = ''
+      cp -a ${ocp-stubs} OCP
     '';
-
-    dontUseCmakeBuildDir = "true";
-    cmakeFlags = [
-      "-S ."
-      "-B ."
-      "-DPython_EXECUTABLE=${python-with-pywrap-packages}/bin/python"
-      "-DOpenCASCADE_INCLUDE_DIR=${src}/opencascade"
-      "-DVTK_DIR=${vtk}/lib/cmake/vtk/"
-    ];
-
-    # the order of the following includes is critical, but makes utterly zero sense to me. Order discovered by trial and error and hulk smashing the keyboard.
-    # pywrapFlags = let
-    #   system = stdenv.hostPlatform.system;
-    #   compiler = if system == "x86_64-linux" then
-    #     "x86_64-unknown-linux-gnu"
-    #   else if system == "aarch64-linux" then
-    #     "aarch64-unknown-linux-gnu"
-    #   else
-    #     (throw "unsupported system ${system}");
-
-    # in builtins.concatStringsSep " " (map (p: "-i " + p) [
-    #   "${rapidjson}/include"
-    #   "${vtk}/include/vtk/"
-    #   "${xorgproto}/include"
-    #   "${libx11.dev}/include"
-    #   "${libglvnd.dev}/include"
-    #   "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}"
-    #   "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}/${compiler}"
-    #   "${glibc.dev}/include"
-    #   # gcc-14-20241116 has its include files in lib/gcc/x86_64-unknown-linux-gnu/14.2.1/
-    #   "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include-fixed"
-    #   "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include"
-    # ]);
-
-    # buildPhase = ''
-    #   runHook preBuild
-    #   pywrap -n $NIX_BUILD_CORES ${pywrapFlags} all ocp.toml
-    #   runHook postBuild
-    # '';
 
     installPhase = ''
       mkdir -p $out
@@ -130,8 +79,8 @@ let
     # https://github.com/NixOS/nixpkgs/pull/28748
     nativeBuildInputs = [ cmake ninja pywrap pybind11 fmt python rapidjson ];
 
-    buildInputs = [ libglvnd.dev libx11.dev xorgproto vtk ]
-      ++ opencascade-occt.buildInputs ++ vtk.buildInputs;
+    buildInputs = [ libglvnd.dev libx11.dev xorgproto vtk-occt-vtk ]
+      ++ opencascade-occt-vtk.buildInputs ++ vtk-occt-vtk.buildInputs;
 
     preConfigure = ''
       export CMAKE_PREFIX_PATH=${pybind11}/share/cmake/pybind11:$CMAKE_PREFIX_PATH
@@ -147,13 +96,13 @@ let
     # I don't think I need this, but keep it here incase I notice multithread problems later:
     # NIX_CFLAGS_LINK = "-lpthread -ldl";
 
-    propagatedBuildInputs = [ opencascade-occt ];
+    propagatedBuildInputs = [ opencascade-occt-vtk ];
 
     cmakeFlags = [
       "-S ../OCP"
       "-DPYTHON_EXECUTABLE=${python}/bin/python"
       "-DOpenCASCADE_INCLUDE_DIR=${src}/opencascade"
-      "-DVTK_DIR=${vtk}/lib/cmake/vtk/"
+      "-DVTK_DIR=${vtk-occt-vtk}/lib/cmake/vtk/"
       "-Wno-dev"
     ];
 
@@ -217,7 +166,7 @@ in buildPythonPackage {
     cp ${setuppy} ./setup.py
   '';
 
-  propagatedBuildInputs = [ opencascade-occt ];
+  propagatedBuildInputs = [ opencascade-occt-vtk ];
 
   pythonImportsCheck = [ "OCP" "OCP.gp" ];
 

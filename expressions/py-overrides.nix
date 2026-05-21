@@ -1,4 +1,4 @@
-{ llvmPackages, ocp-src, pywrap-src, cadquery-src, fetchFromGitHub, casadi
+{ llvmPackages, ocp-src, ocp-stubs, pywrap-src, cadquery-src, fetchFromGitHub, casadi
 }:
 self: super: rec {
   pybind11-2 = self.callPackage ./pybind11-2.13.6 { };
@@ -10,6 +10,7 @@ self: super: rec {
   };
 
   ocp = self.callPackage ./OCP {
+    inherit ocp-stubs;
     llvmPackages = llvmPackages;
     src = ocp-src;
   };

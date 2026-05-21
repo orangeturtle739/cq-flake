@@ -12,7 +12,11 @@
     };
     ocp-src = {
       url =
-        "git+https://github.com/cadquery/ocp?submodules=1&rev=8b9b2186bc58d9cb80bc9e988a6a48827d435722";
+        "git+https://github.com/cadquery/ocp?submodules=1&rev=d69b064a3a604ebf245b1f3b14fb54c835a3a571";
+      flake = false;
+    };
+    ocp-stubs = {
+      url = "https://github.com/CadQuery/OCP/releases/download/7.9.3.1/OCP_src_stubs_Linux.zip";
       flake = false;
     };
     /* vtk-src = {
@@ -25,7 +29,9 @@
   outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     let
       systems = [ "aarch64-linux" "x86_64-linux" ];
-      overlay = final: prev: {
+      overlay = final: prev: rec {
+          opencascade-occt-vtk = prev.opencascade-occt.override {withVtk = true; vtk = prev.vtk; };
+          vtk-occt-vtk = prev.vtk.override {opencascade-occt = opencascade-occt-vtk; pythonSupport = true; };
         /* opencascade-occt = prev.opencascade-occt.overrideAttrs (oldAttrs: rec {
            version = "7.9.3";
            commit =
@@ -43,7 +49,7 @@
         # lib3mf = final.callPackage ./expressions/lib3mf { };
         pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
           (import expressions/py-overrides.nix {
-            inherit (inputs) ocp-src cadquery-src;
+            inherit (inputs) ocp-src ocp-stubs cadquery-src;
             pywrap-src = "${inputs.ocp-src}/pywrap";
             inherit (final) fetchFromGitHub;
             llvmPackages = final.llvmPackages_21;

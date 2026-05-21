@@ -3,7 +3,7 @@
 git, pytestCheckHook, setuptools-scm,
 # Runtime dependencies
 anytree, ezdxf, ipython, numpy, ocp, ocpsvg, lib3mf, py-lib3mf, scipy
-, svgpathtools, sympy, trianglesolver, vtk, webcolors, ocp-gordon, lib }:
+, svgpathtools, sympy, trianglesolver, vtk-occt-vtk, webcolors, ocp-gordon, lib }:
 let
   pname = "build123d";
   version = "0.10.0-beta";
@@ -34,7 +34,7 @@ in buildPythonPackage {
     svgpathtools
     sympy
     trianglesolver
-    vtk
+    vtk-occt-vtk
     webcolors
     ocp-gordon
   ];

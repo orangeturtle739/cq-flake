@@ -1,7 +1,7 @@
 { lib, buildPythonPackage, setuptools, setuptools-scm, isPy3k, pythonOlder
 , fetchFromGitHub, makeFontsConf, freefont_ttf, pytestCheckHook, pytest-xdist
-, ocp, casadi, pythonPackages, ezdxf, ipython, src, nptyping, typish, vtk, nlopt
-, multimethod, docutils, path }:
+, ocp, casadi, pythonPackages, ezdxf, ipython, src, nptyping, typish, vtk-occt-vtk, nlopt
+, multimethod, docutils, path, numpy, scipy, numba}:
 
 buildPythonPackage rec {
   pname = "cadquery";
@@ -20,7 +20,7 @@ buildPythonPackage rec {
   nativeBuildInputs = [ setuptools-scm ];
 
   propagatedBuildInputs =
-    [ ocp ezdxf casadi ipython nptyping typish vtk nlopt multimethod ];
+    [ ocp ezdxf casadi ipython nptyping typish vtk-occt-vtk nlopt multimethod numpy scipy numba ];
 
   # If the user wants extra fonts, probably have to add them here
   FONTCONFIG_FILE = makeFontsConf { fontDirectories = [ freefont_ttf ]; };
@@ -31,7 +31,6 @@ buildPythonPackage rec {
 
   pytestFlags = [
     "-W ignore::FutureWarning"
-    "-n $NIX_BUILD_CORES"
     "-k 'not example'"
     "-k 'not testTextAlignment'"
   ];

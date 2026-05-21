@@ -53,20 +53,33 @@
     "ocp-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1779293172,
-        "narHash": "sha256-raVcCkIAQWiSXvI7XDJBQgyLiUeBHetdzX2TtZo1kNs=",
+        "lastModified": 1770832214,
+        "narHash": "sha256-TKvJ03WHVuUAMTHLr2KWjKU1rBoSOfpAIxjjpYKN2nQ=",
         "ref": "refs/heads/master",
-        "rev": "8b9b2186bc58d9cb80bc9e988a6a48827d435722",
-        "revCount": 236,
+        "rev": "d69b064a3a604ebf245b1f3b14fb54c835a3a571",
+        "revCount": 234,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/cadquery/ocp"
       },
       "original": {
-        "rev": "8b9b2186bc58d9cb80bc9e988a6a48827d435722",
+        "rev": "d69b064a3a604ebf245b1f3b14fb54c835a3a571",
         "submodules": true,
         "type": "git",
         "url": "https://github.com/cadquery/ocp"
+      }
+    },
+    "ocp-stubs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770941290,
+        "narHash": "sha256-gfZFv/evrLHX5TSjAmc6ap45nCbAuNUGkb989BrfqhY=",
+        "type": "tarball",
+        "url": "https://github.com/CadQuery/OCP/releases/download/7.9.3.1/OCP_src_stubs_Linux.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/CadQuery/OCP/releases/download/7.9.3.1/OCP_src_stubs_Linux.zip"
       }
     },
     "root": {
@@ -74,7 +87,8 @@
         "cadquery-src": "cadquery-src",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
-        "ocp-src": "ocp-src"
+        "ocp-src": "ocp-src",
+        "ocp-stubs": "ocp-stubs"
       }
     },
     "systems": {
