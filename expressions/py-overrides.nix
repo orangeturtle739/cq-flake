@@ -1,19 +1,17 @@
 { llvmPackages, ocp-src, pywrap-src, cadquery-src, fetchFromGitHub, casadi
 }:
 self: super: rec {
-  pybind11' = self.callPackage ./pybind11-2.13.6 { };
+  pybind11-2 = self.callPackage ./pybind11-2.13.6 { };
 
   pywrap = self.callPackage ./pywrap {
     inherit llvmPackages;
     # src = "${ocp-src}/pywrap";
     src = pywrap-src;
-    # pybind11 = pybind11';
   };
 
   ocp = self.callPackage ./OCP {
     llvmPackages = llvmPackages;
     src = ocp-src;
-    # pybind11 = pybind11';
   };
 
   cadquery = self.callPackage ./cadquery { src = cadquery-src; };

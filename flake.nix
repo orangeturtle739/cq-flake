@@ -12,7 +12,7 @@
     };
     ocp-src = {
       url =
-        "git+https://github.com/cadquery/ocp?submodules=1&rev=d69b064a3a604ebf245b1f3b14fb54c835a3a571";
+        "git+https://github.com/cadquery/ocp?submodules=1&rev=8b9b2186bc58d9cb80bc9e988a6a48827d435722";
       flake = false;
     };
     /* vtk-src = {

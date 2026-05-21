@@ -53,17 +53,17 @@
     "ocp-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1770832214,
-        "narHash": "sha256-TKvJ03WHVuUAMTHLr2KWjKU1rBoSOfpAIxjjpYKN2nQ=",
+        "lastModified": 1779293172,
+        "narHash": "sha256-raVcCkIAQWiSXvI7XDJBQgyLiUeBHetdzX2TtZo1kNs=",
         "ref": "refs/heads/master",
-        "rev": "d69b064a3a604ebf245b1f3b14fb54c835a3a571",
-        "revCount": 234,
+        "rev": "8b9b2186bc58d9cb80bc9e988a6a48827d435722",
+        "revCount": 236,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/cadquery/ocp"
       },
       "original": {
-        "rev": "d69b064a3a604ebf245b1f3b14fb54c835a3a571",
+        "rev": "8b9b2186bc58d9cb80bc9e988a6a48827d435722",
         "submodules": true,
         "type": "git",
         "url": "https://github.com/cadquery/ocp"

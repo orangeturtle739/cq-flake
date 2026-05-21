@@ -1,6 +1,6 @@
 { lib, stdenv, src, buildPythonPackage, setuptools, pythonOlder, cmake, ninja
-, glibc, opencascade-occt, pybind11, fmt, libglvnd, libx11, xorgproto, python
-, writeTextFile, pywrap, vtk, rapidjson, lief, path, llvmPackages }:
+, glibc, opencascade-occt, fmt, libglvnd, libx11, xorgproto, python
+, writeTextFile, pywrap, vtk, rapidjson, lief, path, llvmPackages, pybind11 }:
 let
   # We need to use an unmodified version number for the dist-utils version so
   # that the version check in cadquery works
@@ -55,7 +55,7 @@ let
     pname = "pybound-ocp";
     inherit version src;
 
-    patches = [./0001-Allow-multiple-opengl-include-directories.patch];
+    patches = [./0001-Allow-multiple-opengl-include-directories.patch ./0001-only-do-app-par-curves.patch ];
 
     # phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
 
@@ -141,6 +141,7 @@ let
       echo $CMAKE_INCLUDE_PATH
       export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -Wno-deprecated-declarations"
       echo "NIX_CFLAGS_COMPILE: $NIX_CFLAGS_COMPILE"
+      rm -f CMakeCache.txt
     '';
 
     # I don't think I need this, but keep it here incase I notice multithread problems later:
