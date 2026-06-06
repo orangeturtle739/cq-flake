@@ -1,7 +1,7 @@
 {
   description = "CQ-editor and CadQuery";
 
-  nixConfig = { extra-experimental-features = "nix-command flakes"; };
+  # nixConfig = { extra-experimental-features = "nix-command flakes"; };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

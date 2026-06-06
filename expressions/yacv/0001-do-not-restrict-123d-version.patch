@@ -1,0 +1,25 @@
+From 023e79d786e9f6c7b3927ecee2436436e085c1c6 Mon Sep 17 00:00:00 2001
+From: Jacob Glueck <swimgiraffe435@gmail.com>
+Date: Sat, 6 Jun 2026 15:31:30 -0700
+Subject: [PATCH] do not restrict 123d version
+
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index ef6e19e..9da957d 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -11,7 +11,7 @@ license = { text = "MIT" }
+ readme = "README.md"
+ requires-python = ">=3.12,<3.13"
+ dependencies = [
+-    "build123d>=0.10,<0.11",
++    "build123d",
+     "pygltflib>=1.16",
+     "pillow>=11.0", # Pyodide has version 11.3, do not upgrade until ready.
+ ]
+-- 
+2.51.2
+

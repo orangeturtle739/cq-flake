@@ -28,6 +28,7 @@ self: super: rec {
   py-lib3mf = self.callPackage ./py-lib3mf { };
 
   trianglesolver = self.callPackage ./trianglesolver.nix { };
+  runtype = self.callPackage ./runtype.nix { };
 
   build123d = self.callPackage ./build123d { };
   ocp-gordon = self.callPackage ./ocp-gordon { };
