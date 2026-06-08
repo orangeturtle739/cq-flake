@@ -55,11 +55,62 @@ let
     pname = "pybound-ocp";
     inherit version src;
 
-    phases = [ "unpackPhase" "buildPhase" "installPhase" ];
+    patches = [./0001-Allow-multiple-opengl-include-directories.patch ];
 
-    buildPhase = ''
-      cp -a ${ocp-stubs} OCP
+    # phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
+
+    nativeBuildInputs = [ cmake ninja pybind11 fmt rapidjson llvmPackages.libclang.dev python-with-pywrap-packages ];
+
+    buildInputs = [ libglvnd.dev libx11.dev xorgproto vtk-occt-vtk llvmPackages.llvm ]
+      ++ opencascade-occt-vtk.buildInputs ++ vtk-occt-vtk.buildInputs;
+
+    # postPatch = ''
+    #   cp ${ocp-dump-symbols}/symbols_mangled_linux.dat ./
+    # '';
+
+    # should this actually be in pywrap?
+    preBuild = ''
+      export PYBIND11_USE_CMAKE=1
     '';
+
+    dontUseCmakeBuildDir = "true";
+    cmakeFlags = [
+      "-S ."
+      "-B ."
+      "-DPython_EXECUTABLE=${python-with-pywrap-packages}/bin/python"
+      "-DOpenCASCADE_INCLUDE_DIR=${src}/opencascade"
+      "-DVTK_DIR=${vtk-occt-vtk}/lib/cmake/vtk/"
+    ];
+
+    # the order of the following includes is critical, but makes utterly zero sense to me. Order discovered by trial and error and hulk smashing the keyboard.
+    # pywrapFlags = let
+    #   system = stdenv.hostPlatform.system;
+    #   compiler = if system == "x86_64-linux" then
+    #     "x86_64-unknown-linux-gnu"
+    #   else if system == "aarch64-linux" then
+    #     "aarch64-unknown-linux-gnu"
+    #   else
+    #     (throw "unsupported system ${system}");
+
+    # in builtins.concatStringsSep " " (map (p: "-i " + p) [
+    #   "${rapidjson}/include"
+    #   "${vtk}/include/vtk/"
+    #   "${xorgproto}/include"
+    #   "${libx11.dev}/include"
+    #   "${libglvnd.dev}/include"
+    #   "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}"
+    #   "${stdenv.cc.cc}/include/c++/${stdenv.cc.version}/${compiler}"
+    #   "${glibc.dev}/include"
+    #   # gcc-14-20241116 has its include files in lib/gcc/x86_64-unknown-linux-gnu/14.2.1/
+    #   "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include-fixed"
+    #   "${stdenv.cc.cc}/lib/gcc/${compiler}/*/include"
+    # ]);
+
+    # buildPhase = ''
+    #   runHook preBuild
+    #   pywrap -n $NIX_BUILD_CORES ${pywrapFlags} all ocp.toml
+    #   runHook postBuild
+    # '';
 
     installPhase = ''
       mkdir -p $out
