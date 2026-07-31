@@ -13,7 +13,7 @@ let
     repo = pname;
     rev = "934ebe661235f3ab17c3a64b1b542171cc8dcc70";
     deepClone = true;
-    hash = "sha256-U65pO7rVIdviXqDlrgQ+nbeZulOriy8Nb3ZuxlXOW7Q=";
+    hash = "sha256-izHeeS6mgZbJ7h66MZYH1IbThVApPIh1sfcTxeeK+wE=";
   };
 in buildPythonPackage {
   inherit src pname version;
