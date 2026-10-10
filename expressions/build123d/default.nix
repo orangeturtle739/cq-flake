@@ -1,6 +1,6 @@
 { buildPythonPackage, fetchFromGitHub,
 # Buildtime dependencies
-git, pytestCheckHook, setuptools-scm,
+pytestCheckHook, setuptools-scm,
 # Runtime dependencies
 anytree, ezdxf, ipython, numpy, ocp, ocpsvg, lib3mf, py-lib3mf, scipy
 , svgpathtools, sympy, trianglesolver, vtk-occt-vtk, webcolors, ocp-gordon, lib
@@ -12,8 +12,7 @@ let
     owner = "gumyr";
     repo = pname;
     rev = "934ebe661235f3ab17c3a64b1b542171cc8dcc70";
-    deepClone = true;
-    hash = "sha256-izHeeS6mgZbJ7h66MZYH1IbThVApPIh1sfcTxeeK+wE=";
+    hash = "sha256-t8lqrUZ2Q98iU3q4sJACDD3vX8CUHMxbRn943s8xmgY=";
   };
 in buildPythonPackage {
   inherit src pname version;
@@ -21,7 +20,9 @@ in buildPythonPackage {
 
   patches = [ ./0001-do-not-restrict-ocp-version.patch ];
 
-  nativeBuildInputs = [ git pytestCheckHook setuptools-scm ];
+  SETUPTOOLS_SCM_PRETEND_VERSION = version;
+
+  nativeBuildInputs = [ pytestCheckHook setuptools-scm ];
 
   propagatedBuildInputs = [
     anytree
